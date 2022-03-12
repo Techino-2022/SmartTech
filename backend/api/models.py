@@ -69,3 +69,14 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.user} {self.content_object}"
+
+
+class Rate(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    count = models.FloatField()
+    content_type = models.ForeignKey(ContentType, on_delete=models.SET_NULL, null=True, blank=True)
+    object_id = models.PositiveIntegerField()
+    content_object = GenericForeignKey('content_type', 'object_id')
+
+    def __str__(self):
+        return f"{self.user} {self.objects}"
