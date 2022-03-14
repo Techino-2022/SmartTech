@@ -12,11 +12,10 @@ class Phone(models.Model):
     pros = models.TextField()
     cons = models.TextField()
     price = models.IntegerField()
-    usb = models.CharField(max_length=255)
-    date = models.DateTimeField(null=True)
+    date = models.DateField(null=True, blank=True)
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=511)
-    ram = models.ManyToManyField(Ram, related_name='phone')
+    ram = models.ForeignKey(Ram, related_name='phone', on_delete=models.PROTECT, null=True)
 
     def __str__(self):
         return f"{self.id} {self.name}"
@@ -28,6 +27,15 @@ class PhoneImgUrl(models.Model):
 
     def __str__(self):
         return self.phone
+
+
+class Usb(models.Model):
+    version = models.CharField(max_length=32)
+    on_to_go = models.BooleanField(default=True)
+    phone = models.ForeignKey(Phone, on_delete=models.CASCADE, related_name='usb')
+
+    def __str__(self):
+        return f"{self.phone} usb"
 
 
 class Platform(models.Model):
@@ -82,7 +90,7 @@ class Brand(models.Model):
     phone = models.OneToOneField(Phone, on_delete=models.CASCADE, related_name='brand')
 
     def __str__(self):
-        return f"{self.phone}-{self.name}"
+        return f"{self.name}-{self.phone}"
 
 
 class Battery(models.Model):
@@ -155,10 +163,10 @@ class Body(models.Model):
 
 
 class Material(models.Model):
-    frame = models.CharField(max_length=32)
-    back_glass = models.CharField(max_length=32)
-    front_glass = models.CharField(max_length=32)
-    body = models.OneToOneField(Body, on_delete=models.CASCADE, related_name='material')
+    frame = models.CharField(max_length=32, null=True, blank=True)
+    back_glass = models.CharField(max_length=32, null=True, blank=True)
+    front_glass = models.CharField(max_length=32, null=True, blank=True)
+    body = models.OneToOneField(Body, on_delete=models.CASCADE, related_name='material', null=True, blank=True)
 
     def __str__(self):
         return f"{self.body} material"
@@ -176,9 +184,11 @@ class Network(models.Model):
 
 
 class Gps(models.Model):
+    a_gps = models.BooleanField(default=False)
     bds = models.BooleanField(default=False)
     galileo = models.BooleanField(default=False)
     glonass = models.BooleanField(default=False)
+    qzss = models.BooleanField(default=False)
     dual_gps = models.BooleanField(default=False)
     network = models.OneToOneField(Network, on_delete=models.CASCADE, related_name='gps')
 
@@ -213,10 +223,10 @@ class Bluetooth(models.Model):
 
 
 class CellNetwork(models.Model):
-    c_2g_bands = models.TextField()
-    c_3g_bands = models.TextField()
-    c_4g_bands = models.TextField()
-    c_5g_bands = models.TextField()
+    c_2g_bands = models.TextField(null=True, blank=True)
+    c_3g_bands = models.TextField(null=True, blank=True)
+    c_4g_bands = models.TextField(null=True, blank=True)
+    c_5g_bands = models.TextField(null=True, blank=True)
     network = models.OneToOneField(Network, on_delete=models.CASCADE, related_name='cell_network')
 
     def __str__(self):
