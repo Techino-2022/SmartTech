@@ -15,6 +15,9 @@ class Phone(models.Model):
     date = models.DateField(null=True, blank=True)
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=511)
+    camera_features = models.TextField(null=True, blank=True)
+    image_stabilization = models.CharField(max_length=64, null=True, blank=True)
+    video_quality = models.CharField(max_length=64, null=True, blank=True)
     ram = models.ForeignKey(Ram, related_name='phone', on_delete=models.PROTECT, null=True)
 
     def __str__(self):
@@ -26,13 +29,13 @@ class PhoneImgUrl(models.Model):
     phone = models.ForeignKey(Phone, on_delete=models.CASCADE, related_name='image_url')
 
     def __str__(self):
-        return self.phone
+        return f"{self.phone} -- {self.image}"
 
 
 class Usb(models.Model):
     version = models.CharField(max_length=32)
     on_to_go = models.BooleanField(default=True)
-    phone = models.ForeignKey(Phone, on_delete=models.CASCADE, related_name='usb')
+    phone = models.ManyToManyField(Phone, related_name='usb')
 
     def __str__(self):
         return f"{self.phone} usb"
@@ -40,30 +43,31 @@ class Usb(models.Model):
 
 class Platform(models.Model):
     core_count = models.CharField(max_length=127)
+    processor_size = models.IntegerField(null=True, blank=True)
     cpu_chipset = models.CharField(max_length=127)
     gpu_chipset = models.CharField(max_length=127)
-    phone = models.OneToOneField(Phone, on_delete=models.CASCADE, related_name='platform')
+    phone = models.ManyToManyField(Phone, related_name='platform')
 
     def __str__(self):
-        return f"{self.phone}={self.cpu_chipset}"
+        return f"{self.cpu_chipset}"
 
 
 class Sound(models.Model):
     jack = models.BooleanField(default=True)
     speaker_quality = models.CharField(max_length=64)
-    phone = models.OneToOneField(Phone, on_delete=models.CASCADE, related_name='sound')
+    phone = models.ManyToManyField(Phone, related_name='sound')
 
     def __str__(self):
-        return f"{self.phone} sound"
+        return f"{self.speaker_quality} -- {self.jack}"
 
 
 class Storage(models.Model):
     technology = models.CharField(max_length=127)
-    size = models.ManyToManyField(Ram, related_name='storage')
-    phone = models.OneToOneField(Phone, on_delete=models.CASCADE, related_name='storage')
+    size = models.FloatField(default=64)
+    phone = models.ManyToManyField(Phone, related_name='storage')
 
     def __str__(self):
-        return f"{self.phone} storage"
+        return f"{self.size} - {self.technology}"
 
 
 class OperatingSystem(models.Model):
@@ -78,19 +82,19 @@ class OperatingSystem(models.Model):
     ]
     version = models.CharField(max_length=64)
     os = models.CharField(max_length=15, choices=OS_CHOICES, default='android')
-    phone = models.OneToOneField(Phone, on_delete=models.CASCADE, related_name='operating_system')
+    phone = models.ManyToManyField(Phone, related_name='operating_system')
 
     def __str__(self):
-        return f"{self.phone}-{self.os}"
+        return f"{self.os} {self.version}"
 
 
 class Brand(models.Model):
     name = models.CharField(max_length=64)
     country = models.CharField(max_length=64)
-    phone = models.OneToOneField(Phone, on_delete=models.CASCADE, related_name='brand')
+    phone = models.ManyToManyField(Phone, related_name='brand')
 
     def __str__(self):
-        return f"{self.name}-{self.phone}"
+        return f"{self.name}"
 
 
 class Battery(models.Model):
@@ -103,24 +107,22 @@ class Battery(models.Model):
     removable = models.BooleanField(default=False)
     wireless_charging = models.BooleanField(default=False)
     type_select = models.CharField(max_length=20, choices=TYPE_CHOICES, default='pol')
-    phone = models.OneToOneField(Phone, on_delete=models.CASCADE, related_name='battery')
+    phone = models.ManyToManyField(Phone, related_name='battery')
 
     def __str__(self):
-        return f"{self.phone}-{self.type_select}"
+        return f"{self.type_select} - {self.capacity} - {self.removable}"
 
 
 class Camera(models.Model):
     features = models.TextField()
-    pixel_count = models.IntegerField()
-    laser = models.BooleanField(default=False)
-    camera_model = models.CharField(max_length=64)
-    video_quality = models.CharField(max_length=64)
-    image_stabilization = models.CharField(max_length=64)
-    pixel_size = models.DecimalField(max_digits=4, decimal_places=3)
-    phone = models.OneToOneField(Phone, on_delete=models.CASCADE, related_name='camera')
+    pixel_count = models.IntegerField(null=True, blank=True)
+    diaphragm = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
+    camera_model = models.CharField(max_length=64, null=True, blank=True)
+    pixel_size = models.DecimalField(max_digits=4, decimal_places=3, null=True, blank=True)
+    phone = models.ManyToManyField(Phone, related_name='camera')
 
     def __str__(self):
-        return f"{self.phone}-{self.camera_model}"
+        return f"{self.pixel_count} - {self.diaphragm}"
 
 
 class Sensor(models.Model):
@@ -131,9 +133,11 @@ class Sensor(models.Model):
     proximity = models.BooleanField(default=False)
     barometer = models.BooleanField(default=False)
     fingerprint = models.BooleanField(default=False)
+    fingerprint_type = models.CharField(max_length=64, null=True, blank=True)
     temperature = models.BooleanField(default=False)
     accelerometer = models.BooleanField(default=False)
-    phone = models.OneToOneField(Phone, on_delete=models.CASCADE, related_name='sensor')
+    laser = models.BooleanField(default=False, null=True, blank=True)
+    phone = models.ManyToManyField(Phone, related_name='sensor')
 
     def __str__(self):
         return f"{self.phone} sensor"
@@ -156,17 +160,17 @@ class Body(models.Model):
     ip_certificate = models.CharField(max_length=16)
     always_on_display = models.BooleanField(default=False)
     color = models.ManyToManyField(Color, related_name='body')
-    phone = models.OneToOneField(Phone, on_delete=models.CASCADE, related_name='body')
+    phone = models.ManyToManyField(Phone, related_name='body')
 
     def __str__(self):
-        return f"{self.id} {self.phone} body"
+        return f"{self.id} {self.size} {self.display} {self.resolution}"
 
 
 class Material(models.Model):
     frame = models.CharField(max_length=32, null=True, blank=True)
     back_glass = models.CharField(max_length=32, null=True, blank=True)
     front_glass = models.CharField(max_length=32, null=True, blank=True)
-    body = models.OneToOneField(Body, on_delete=models.CASCADE, related_name='material', null=True, blank=True)
+    body = models.ManyToManyField(Body, related_name='material', null=True, blank=True)
 
     def __str__(self):
         return f"{self.body} material"
@@ -177,10 +181,10 @@ class Network(models.Model):
     radio = models.BooleanField(default=True)
     sim_slot = models.CharField(max_length=32)
     infrared = models.BooleanField(default=False)
-    phone = models.OneToOneField(Phone, on_delete=models.CASCADE, related_name='network')
+    phone = models.ManyToManyField(Phone, related_name='network')
 
     def __str__(self):
-        return f"{self.id} {self.phone} network"
+        return f"{self.id}  network"
 
 
 class Gps(models.Model):
@@ -190,22 +194,23 @@ class Gps(models.Model):
     glonass = models.BooleanField(default=False)
     qzss = models.BooleanField(default=False)
     dual_gps = models.BooleanField(default=False)
-    network = models.OneToOneField(Network, on_delete=models.CASCADE, related_name='gps')
+    network = models.ManyToManyField(Network, related_name='gps')
 
     def __str__(self):
         return f"{self.network} gps"
 
 
 class Wifi(models.Model):
-    hotspot = models.BooleanField(default=False)
     w_80211a = models.BooleanField(default=False)
     w_80211b = models.BooleanField(default=False)
     w_80211g = models.BooleanField(default=False)
     w_80211n = models.BooleanField(default=False)
     w_80211ac = models.BooleanField(default=False)
     w_802116e = models.BooleanField(default=False)
+    dual_band = models.BooleanField(default=False)
+    hotspot = models.BooleanField(default=False)
     wifi_direct = models.BooleanField(default=False)
-    network = models.OneToOneField(Network, on_delete=models.CASCADE, related_name='wifi')
+    network = models.ManyToManyField(Network, related_name='wifi')
 
     def __str__(self):
         return f"{self.network} wifi"
@@ -216,10 +221,10 @@ class Bluetooth(models.Model):
     edr = models.BooleanField(default=False)
     a2dp = models.BooleanField(default=False)
     aptx = models.BooleanField(default=False)
-    network = models.OneToOneField(Network, on_delete=models.CASCADE, related_name='bluetooth')
+    network = models.ManyToManyField(Network, related_name='bluetooth')
 
     def __str__(self):
-        return f"{self.network} bluetooth"
+        return f"{self.id} bluetooth"
 
 
 class CellNetwork(models.Model):
@@ -227,7 +232,7 @@ class CellNetwork(models.Model):
     c_3g_bands = models.TextField(null=True, blank=True)
     c_4g_bands = models.TextField(null=True, blank=True)
     c_5g_bands = models.TextField(null=True, blank=True)
-    network = models.OneToOneField(Network, on_delete=models.CASCADE, related_name='cell_network')
+    network = models.ManyToManyField(Network, related_name='cell_network')
 
     def __str__(self):
         return f"{self.network} cell_network"
