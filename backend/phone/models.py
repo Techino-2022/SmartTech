@@ -56,7 +56,7 @@ class Platform(models.Model):
 
 class Sound(models.Model):
     jack = models.BooleanField(default=True)
-    speaker_quality = models.CharField(max_length=64)
+    speaker_quality = models.CharField(max_length=64, null=True, blank=True)
     phone = models.ManyToManyField(Phone, related_name='sound')
 
     def __str__(self):
@@ -136,6 +136,7 @@ class Camera(models.Model):
 
 
 class Sensor(models.Model):
+    face_id = models.BooleanField(default=False)
     fingerprint = models.BooleanField(default=False)
     fingerprint_type = models.CharField(max_length=64, null=True, blank=True)
     accelerometer = models.BooleanField(default=False)
@@ -167,6 +168,8 @@ class Body(models.Model):
     display = models.CharField(max_length=64)
     resolution = models.CharField(max_length=32)
     TYPE_CHOICES_PROTECTION = [
+        ('Scratch-resistant ceramic glass, oleophobic coating', 'Ceramic Glass + oleophobic'),
+        ('Corning Gorilla Glass 6', 'Gorilla 6'),
         ('Corning Gorilla Glass 5', 'Gorilla 5'),
         ('Corning Gorilla Glass 4', 'Gorilla 4'),
         ('Corning Gorilla Glass 3', 'Gorilla 3'),
@@ -175,7 +178,7 @@ class Body(models.Model):
         ('Corning Gorilla Glass Victus+', 'Victus+'),
         ('Not Specified', 'Unknown')
     ]
-    protection = models.CharField(max_length=32, choices=TYPE_CHOICES_PROTECTION, default='Unknown')
+    protection = models.CharField(max_length=64, choices=TYPE_CHOICES_PROTECTION, default='Unknown')
     ip_certificate = models.CharField(max_length=16, null=True, blank=True)
     always_on_display = models.BooleanField(default=False)
     color = models.ManyToManyField(Color, related_name='body')
