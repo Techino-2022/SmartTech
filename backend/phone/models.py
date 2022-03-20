@@ -5,31 +5,34 @@ class Ram(models.Model):
     number = models.IntegerField()
 
     def __str__(self):
-        return f"{self.number}"
+        return f"{self.number}GB"
 
 
 class Phone(models.Model):
-    pros = models.TextField()
-    cons = models.TextField()
-    price = models.IntegerField()
-    date = models.DateField(null=True, blank=True)
     name = models.CharField(max_length=255)
     description = models.CharField(max_length=511)
-    camera_features = models.TextField(null=True, blank=True)
-    image_stabilization = models.CharField(max_length=64, null=True, blank=True)
-    video_quality = models.CharField(max_length=64, null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
+    model = models.CharField(max_length=64, default='A')
     ram = models.ForeignKey(Ram, related_name='phone', on_delete=models.PROTECT, null=True)
+    price = models.IntegerField()
+    back_camera_features = models.TextField(null=True, blank=True)
+    front_camera_features = models.TextField(null=True, blank=True)
+    image_stabilization = models.CharField(max_length=64, null=True, blank=True)
+    back_camera_video_quality = models.CharField(max_length=64, null=True, blank=True)
+    front_camera_video_quality = models.CharField(max_length=64, null=True, blank=True)
+    pros = models.TextField()
+    cons = models.TextField()
 
     def __str__(self):
-        return f"{self.id} {self.name}"
+        return f"ID: {self.id} -- Name: {self.name} -- Model:{self.model} -- RAM:{self.ram}"
 
 
 class PhoneImgUrl(models.Model):
     image = models.ImageField(upload_to='images')
-    phone = models.ForeignKey(Phone, on_delete=models.CASCADE, related_name='image_url')
+    phone = models.ManyToManyField(Phone, related_name='image_url')
 
     def __str__(self):
-        return f"{self.phone} -- {self.image}"
+        return f"{self.id} -- {self.image}"
 
 
 class Usb(models.Model):
@@ -38,18 +41,17 @@ class Usb(models.Model):
     phone = models.ManyToManyField(Phone, related_name='usb')
 
     def __str__(self):
-        return f"{self.phone} usb"
+        return f"version: {self.version} -- OTG: {self.on_to_go}"
 
 
 class Platform(models.Model):
-    core_count = models.CharField(max_length=127)
-    processor_size = models.IntegerField(null=True, blank=True)
-    cpu_chipset = models.CharField(max_length=127)
-    gpu_chipset = models.CharField(max_length=127)
+    core_count = models.TextField()
+    cpu_chipset = models.TextField()
+    gpu_chipset = models.TextField()
     phone = models.ManyToManyField(Phone, related_name='platform')
 
     def __str__(self):
-        return f"{self.cpu_chipset}"
+        return f"{self.cpu_chipset} {self.gpu_chipset}"
 
 
 class Sound(models.Model):
@@ -58,12 +60,12 @@ class Sound(models.Model):
     phone = models.ManyToManyField(Phone, related_name='sound')
 
     def __str__(self):
-        return f"{self.speaker_quality} -- {self.jack}"
+        return f"quality: {self.speaker_quality} -- 3.5mm jack: {self.jack}"
 
 
 class Storage(models.Model):
-    technology = models.CharField(max_length=127)
     size = models.FloatField(default=64)
+    technology = models.CharField(max_length=127)
     phone = models.ManyToManyField(Phone, related_name='storage')
 
     def __str__(self):
@@ -80,12 +82,13 @@ class OperatingSystem(models.Model):
         ('blackberry ', 'Blackberry'),
         ('windows phone', 'Windows'),
     ]
-    version = models.CharField(max_length=64)
     os = models.CharField(max_length=15, choices=OS_CHOICES, default='android')
+    version = models.CharField(max_length=64)
+    interface = models.CharField(max_length=64, null=True, blank=True)
     phone = models.ManyToManyField(Phone, related_name='operating_system')
 
     def __str__(self):
-        return f"{self.os} {self.version}"
+        return f"{self.os} {self.version} {self.interface}"
 
 
 class Brand(models.Model):
@@ -102,45 +105,52 @@ class Battery(models.Model):
         ('pol', 'Lithium Polymer'),
         ('ion', 'Lithium Ion'),
     ]
-    features = models.TextField()
+    TYPE_CHOICES_WIRELESS_CHARGING = [
+        ('Yes', 'Supprot Wireless Charging'),
+        ('No', 'not Supprot Wireless Charging'),
+        ('Unknown', 'not Specified'),
+    ]
     capacity = models.IntegerField()
-    removable = models.BooleanField(default=False)
-    wireless_charging = models.BooleanField(default=False)
     type_select = models.CharField(max_length=20, choices=TYPE_CHOICES, default='pol')
+    removable = models.BooleanField(default=False)
+    wireless_charging = models.CharField(max_length=32, choices=TYPE_CHOICES_WIRELESS_CHARGING, default='No')
+    features = models.TextField()
     phone = models.ManyToManyField(Phone, related_name='battery')
 
     def __str__(self):
-        return f"{self.type_select} - {self.capacity} - {self.removable}"
+        return f"capacity: {self.capacity} -- type: {self.type_select} -- removable: {self.removable} -- wireless_charging: {self.wireless_charging}"
 
 
 class Camera(models.Model):
-    features = models.TextField()
+    is_front_camera = models.BooleanField(default=False)
     pixel_count = models.IntegerField(null=True, blank=True)
     diaphragm = models.DecimalField(max_digits=4, decimal_places=2, null=True, blank=True)
-    camera_model = models.CharField(max_length=64, null=True, blank=True)
     pixel_size = models.DecimalField(max_digits=4, decimal_places=3, null=True, blank=True)
+    usage = models.CharField(max_length=64, null=True, blank=True)
+    features = models.TextField(null=True, blank=True)
+    camera_model = models.CharField(max_length=64, null=True, blank=True)
     phone = models.ManyToManyField(Phone, related_name='camera')
 
     def __str__(self):
-        return f"{self.pixel_count} - {self.diaphragm}"
+        return f"ID: {self.id} -- is_front: {self.is_front_camera} -- pixel: {self.pixel_count} -- diaphragm: {self.diaphragm} -- pixel size: {self.pixel_size} -- usuage: {self.usage}"
 
 
 class Sensor(models.Model):
-    h2o = models.BooleanField(default=False)
-    compass = models.BooleanField(default=False)
-    gyroscope = models.BooleanField(default=False)
-    beat_rate = models.BooleanField(default=False)
-    proximity = models.BooleanField(default=False)
-    barometer = models.BooleanField(default=False)
     fingerprint = models.BooleanField(default=False)
     fingerprint_type = models.CharField(max_length=64, null=True, blank=True)
-    temperature = models.BooleanField(default=False)
     accelerometer = models.BooleanField(default=False)
+    gyroscope = models.BooleanField(default=False)
+    proximity = models.BooleanField(default=False)
+    compass = models.BooleanField(default=False)
+    barometer = models.BooleanField(default=False)
+    h2o = models.BooleanField(default=False)
+    beat_rate = models.BooleanField(default=False)
+    temperature = models.BooleanField(default=False)
     laser = models.BooleanField(default=False, null=True, blank=True)
     phone = models.ManyToManyField(Phone, related_name='sensor')
 
     def __str__(self):
-        return f"{self.phone} sensor"
+        return f"{self.id} - fingerprint_type: {self.fingerprint_type} - accelerometer: {self.accelerometer} - gyroscope: {self.gyroscope} - proximity: {self.proximity}"
 
 
 class Color(models.Model):
@@ -156,35 +166,54 @@ class Body(models.Model):
     display_features = models.TextField()
     display = models.CharField(max_length=64)
     resolution = models.CharField(max_length=32)
-    protection = models.CharField(max_length=32)
-    ip_certificate = models.CharField(max_length=16)
+    TYPE_CHOICES_PROTECTION = [
+        ('Corning Gorilla Glass 5', 'Gorilla 5'),
+        ('Corning Gorilla Glass 4', 'Gorilla 4'),
+        ('Corning Gorilla Glass 3', 'Gorilla 3'),
+        ('Corning Gorilla Glass 2', 'Gorilla 2'),
+        ('Corning Gorilla Glass 1', 'Gorilla 1'),
+        ('Corning Gorilla Glass Victus+', 'Victus+'),
+        ('Not Specified', 'Unknown')
+    ]
+    protection = models.CharField(max_length=32, choices=TYPE_CHOICES_PROTECTION, default='Unknown')
+    ip_certificate = models.CharField(max_length=16, null=True, blank=True)
     always_on_display = models.BooleanField(default=False)
     color = models.ManyToManyField(Color, related_name='body')
-    phone = models.ManyToManyField(Phone, related_name='body')
+    phone = models.OneToOneField(Phone, related_name='body', on_delete=models.PROTECT, null=True)
 
     def __str__(self):
-        return f"{self.id} {self.size} {self.display} {self.resolution}"
+        return f"ID: {self.id} -- Phone: {self.phone}"
 
 
 class Material(models.Model):
     frame = models.CharField(max_length=32, null=True, blank=True)
     back_glass = models.CharField(max_length=32, null=True, blank=True)
     front_glass = models.CharField(max_length=32, null=True, blank=True)
-    body = models.ManyToManyField(Body, related_name='material', null=True, blank=True)
+    body = models.ManyToManyField(Body, related_name='material')
 
     def __str__(self):
-        return f"{self.body} material"
+        return f"ID: {self.id} -- Frame: {self.frame} -- back-glass: {self.back_glass} -- front-glass: {self.front_glass}"
 
 
 class Network(models.Model):
-    nfc = models.BooleanField(default=False)
+    TYPE_CHOICES_NFC = [
+        ('Yes', 'Have NFC'),
+        ('No', 'Have not NFC'),
+        ('Unknown', 'not Specified'),
+    ]
+    nfc = models.CharField(max_length=32, choices=TYPE_CHOICES_NFC, default='Yes')
     radio = models.BooleanField(default=True)
-    sim_slot = models.CharField(max_length=32)
-    infrared = models.BooleanField(default=False)
-    phone = models.ManyToManyField(Phone, related_name='network')
+    sim_slot = models.CharField(max_length=128)
+    TYPE_CHOICES_INFRARED = [
+        ('Yes', 'Have Infrared'),
+        ('No', 'Have not Infrared'),
+        ('Unknown', 'not Specified'),
+    ]
+    infrared = models.CharField(max_length=32, choices=TYPE_CHOICES_INFRARED, default='No')
+    phone = models.OneToOneField(Phone, related_name='network', on_delete=models.PROTECT, null=True)
 
     def __str__(self):
-        return f"{self.id}  network"
+        return f"{self.id} {self.phone}"
 
 
 class Gps(models.Model):
@@ -197,7 +226,7 @@ class Gps(models.Model):
     network = models.ManyToManyField(Network, related_name='gps')
 
     def __str__(self):
-        return f"{self.network} gps"
+        return f"ID: {self.id} -- A-GPS: {self.a_gps} -- BDS: {self.bds} -- GALILEO: {self.galileo} -- GLONASS: {self.glonass} -- QZSS: {self.qzss} -- dual_gps: {self.dual_gps}"
 
 
 class Wifi(models.Model):
@@ -213,18 +242,19 @@ class Wifi(models.Model):
     network = models.ManyToManyField(Network, related_name='wifi')
 
     def __str__(self):
-        return f"{self.network} wifi"
+        return f"{self.id} WIFI"
 
 
 class Bluetooth(models.Model):
-    le = models.BooleanField(default=False)
-    edr = models.BooleanField(default=False)
+    version = models.FloatField(null=True, blank=True)
     a2dp = models.BooleanField(default=False)
+    le = models.BooleanField(default=False)
     aptx = models.BooleanField(default=False)
+    edr = models.BooleanField(default=False)
     network = models.ManyToManyField(Network, related_name='bluetooth')
 
     def __str__(self):
-        return f"{self.id} bluetooth"
+        return f"version: {self.version} -- A2DP: {self.a2dp} -- LE :{self.le} -- aptX: {self.aptx} -- EDR: {self.edr}"
 
 
 class CellNetwork(models.Model):
@@ -235,4 +265,4 @@ class CellNetwork(models.Model):
     network = models.ManyToManyField(Network, related_name='cell_network')
 
     def __str__(self):
-        return f"{self.network} cell_network"
+        return f"{self.id}"
