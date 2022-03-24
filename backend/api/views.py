@@ -8,7 +8,7 @@ from . import filtersets
 class UserFilter(FilterSet):
     class Meta:
         model = get_user_model()
-        fields = '__all__'
+        exclude = ['avatar']
 
 
 class UserViewSet(viewsets.ModelViewSet):
