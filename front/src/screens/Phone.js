@@ -6,7 +6,6 @@ import {useHeaderHeight} from '@react-navigation/stack';
 
 import {useTheme} from '../hooks';
 import useApi from '../hooks/useApi';
-import getPhones from '../api/phone';
 import {Block, Button, Input, Switch, Modal, Text} from '../components';
 
 import colors from '../config/colors';
@@ -16,12 +15,6 @@ const Phone = () => {
   const [showModal, setModal] = useState(false);
   const [quantity, setQuantity] = useState('01');
   const {assets, gradients, sizes} = useTheme();
-  const getPhone = useApi(getPhones.getAllPhones);
-
-  useEffect(() => {
-    getPhone.request();
-    console.log(getPhone.data[0].name);
-  }, []);
 
   return (
     <Block
@@ -34,11 +27,11 @@ const Phone = () => {
         marginBottom={sizes.s}
         color={colors.darkwhite}
         style={{alignSelf: 'center', marginRight: 20}}>
-        {getPhone.data[0].name}
+        Sumsung
       </Text>
 
       <Image
-        source={{uri: getPhone.data[0].image_url[0].image}}
+        source={require('../images/Samsung_Note20_1.jpg')}
         style={{
           resizeMode: 'contain',
           width: 250,

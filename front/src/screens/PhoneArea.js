@@ -1,9 +1,12 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {useData, useTheme, useTranslation} from '../hooks';
+import useApi from '../hooks/useApi';
 import {Block, Button, Image, Input, Product, Text} from '../components';
+import getPhones from '../api/phone';
 
-import colors from '../config/colors'
+import colors from '../config/colors';
+import ActivityIndicator from '../components/ActivityIndicator';
 
 const Home = () => {
   const {t} = useTranslation();
@@ -11,6 +14,11 @@ const Home = () => {
   const {following, trending} = useData();
   const [products, setProducts] = useState(following);
   const {assets, gradients, sizes} = useTheme();
+  const phones = useApi(getPhones.getAllPhones);
+
+  useEffect(() => {
+    phones.request();
+  }, []);
 
   const handleProducts = useCallback(
     (tab) => {
@@ -48,9 +56,7 @@ const Home = () => {
               gradient={gradients?.[tab === 0 ? 'black' : 'grey']}>
               <Image source={assets.extras} color={colors.gold} radius={0} />
             </Block>
-            <Text color={colors.darkwhite}>
-              Most Viewed
-            </Text>
+            <Text color={colors.darkwhite}>Most Viewed</Text>
           </Block>
         </Button>
         <Block
@@ -78,12 +84,12 @@ const Home = () => {
               />
             </Block>
             <Text color={colors.darkwhite} marginRight={20}>
-              Filter   
+              Filter
             </Text>
           </Block>
         </Button>
       </Block>
-
+      {phones.loading && <ActivityIndicator visible={true} />}
       {/* products list */}
       <Block
         scroll
@@ -91,8 +97,12 @@ const Home = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: sizes.l}}>
         <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
-          {products?.map((product) => (
-            <Product {...product} key={`card-${product?.id}`} />
+          {phones.data?.map((product) => (
+            <Product
+              type="vertical"
+              data={product}
+              key={`card-${product?.id}`}
+            />
           ))}
         </Block>
       </Block>

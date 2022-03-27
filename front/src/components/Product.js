@@ -6,9 +6,9 @@ import Image from './Image';
 import Text from './Text';
 import {useTheme, useTranslation} from '../hooks';
 
-import colors from '../config/colors'
+import colors from '../config/colors';
 
-const Product = ({image, title, type, linkLabel}) => {
+const Product = ({image, title, type, linkLabel, data}) => {
   const {t} = useTranslation();
   const {assets, sizes} = useTheme();
 
@@ -21,12 +21,12 @@ const Product = ({image, title, type, linkLabel}) => {
       flex={0}
       row={isHorizontal}
       marginBottom={sizes.sm}
-      color = {colors.lightgrey}
+      color={colors.lightgrey}
       width={isHorizontal ? CARD_WIDTH * 2 + sizes.sm : CARD_WIDTH}
-      style={{borderWidth:1,borderColor:colors.gold}}>
+      style={{borderWidth: 1, borderColor: colors.gold}}>
       <Image
         resizeMode="cover"
-        source={{uri: image}}
+        source={{uri: data.image_url[0].image}}
         style={{
           height: isHorizontal ? 114 : 110,
           width: !isHorizontal ? '100%' : sizes.width / 2.435,
@@ -37,8 +37,8 @@ const Product = ({image, title, type, linkLabel}) => {
         justify="space-between"
         paddingLeft={isHorizontal ? sizes.sm : 0}
         paddingBottom={isHorizontal ? sizes.s : 0}>
-        <Text p marginBottom={sizes.s} color = {colors.gold}>
-          {title}
+        <Text p marginBottom={sizes.s} color={colors.gold}>
+          {data.name}
         </Text>
         <TouchableOpacity>
           <Block row flex={0} align="center">
@@ -48,7 +48,7 @@ const Product = ({image, title, type, linkLabel}) => {
               semibold
               size={sizes.linkSize}
               marginRight={sizes.s}>
-              {linkLabel || t('common.readArticle')}
+              {data.brand[0].name || t('common.readArticle')}
             </Text>
             <Image source={assets.arrow} color={colors.darkwhite} />
           </Block>
