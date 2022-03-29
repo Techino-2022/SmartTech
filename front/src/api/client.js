@@ -1,7 +1,7 @@
 import {create} from 'apisauce';
 
 const apiClient = create({
-  baseURL: 'http://192.168.141.233:8000/',
+  baseURL: 'https://smarttech2022.pythonanywhere.com/',
 });
 
 export default apiClient;

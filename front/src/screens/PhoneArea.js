@@ -31,8 +31,8 @@ const Home = () => {
   return (
     <Block>
       {/* search input */}
-      <Block color={colors.lightgrey} flex={0} padding={sizes.padding}>
-        <Input search placeholder={t('common.search')} />
+      <Block color={colors.darkgrey} flex={0} padding={sizes.padding}>
+        <Input search placeholder={t('common.search')} color={colors.gold} />
       </Block>
 
       {/* toggle products list */}
@@ -41,7 +41,7 @@ const Home = () => {
         flex={0}
         align="center"
         justify="flex-end"
-        color={colors.lightgrey}
+        color={colors.darkgrey}
         paddingBottom={sizes.sm}>
         <Button onPress={() => handleProducts(0)}>
           <Block row align="center">
@@ -89,6 +89,7 @@ const Home = () => {
           </Block>
         </Button>
       </Block>
+      {console.log(phones.data)}
       {phones.loading && <ActivityIndicator visible={true} />}
       {/* products list */}
       <Block
