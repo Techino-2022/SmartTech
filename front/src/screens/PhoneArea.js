@@ -1,9 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
+import {useSelector} from 'react-redux';
 
 import {useData, useTheme, useTranslation} from '../hooks';
 import useApi from '../hooks/useApi';
 import {Block, Button, Image, Input, Product, Text} from '../components';
 import getPhones from '../api/phone';
+import {getPhonesByModel} from '../store/phones';
 
 import colors from '../config/colors';
 import ActivityIndicator from '../components/ActivityIndicator';
@@ -12,13 +14,27 @@ const Home = () => {
   const {t} = useTranslation();
   const [tab, setTab] = useState(0);
   const {following, trending} = useData();
-  const [products, setProducts] = useState(following);
+  const [products, setProducts] = useState([]);
+  const [isShown, setIsShown] = useState(false);
   const {assets, gradients, sizes} = useTheme();
   const phones = useApi(getPhones.getAllPhones);
+  // const {list, loading} = useSelector((state) => state.entities.phones);
+  const sta = useSelector((state) => state);
 
   useEffect(() => {
-    phones.request();
+    setTimeout(() => {
+      setIsShown(true);
+      const dat = getPhonesByModel('A')(sta);
+      setProducts(dat);
+    }, 5000);
   }, []);
+
+  // useEffect(() => {
+  //   setLoading(load);
+  //   setTimeout(() => {
+  //     setAllPhones(data);
+  //   }, 5000);
+  // }, [load, data]);
 
   const handleProducts = useCallback(
     (tab) => {
@@ -89,22 +105,22 @@ const Home = () => {
           </Block>
         </Button>
       </Block>
-      {console.log(phones.data)}
-      {phones.loading && <ActivityIndicator visible={true} />}
-      {/* products list */}
+      {!isShown && <ActivityIndicator visible={true} />}
+      {console.log(products)}
       <Block
         scroll
         paddingHorizontal={sizes.padding}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: sizes.l}}>
         <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
-          {phones.data?.map((product) => (
-            <Product
-              type="vertical"
-              data={product}
-              key={`card-${product?.id}`}
-            />
-          ))}
+          {isShown &&
+            products.map((product) => (
+              <Product
+                type="vertical"
+                data={product}
+                key={`card-${product?.id}`}
+              />
+            ))}
         </Block>
       </Block>
     </Block>

@@ -26,7 +26,7 @@ const Product = ({image, title, type, linkLabel, data}) => {
       style={{borderWidth: 1, borderColor: colors.gold}}>
       <Image
         resizeMode="contain"
-        source={{uri: data.image_url[0].image}}
+        source={{uri: 'https://picsum.photos/200'}}
         style={{
           height: isHorizontal ? 114 : 110,
           width: !isHorizontal ? '100%' : sizes.width / 2.435,
@@ -38,98 +38,73 @@ const Product = ({image, title, type, linkLabel, data}) => {
         paddingLeft={isHorizontal ? sizes.sm : 0}
         paddingBottom={isHorizontal ? sizes.s : 0}>
         <Text p marginBottom={sizes.s} color={colors.gold}>
-          {data.brand[0].name} {data.name}
+          {data.name}
         </Text>
-        
-          <Block row>
 
+        <Block row>
           <Text
-              p
-              color={colors.darkwhite}
-              semibold
-              size={10}
-              marginRight={sizes.s}>
-              CPU:
-            </Text>
+            p
+            color={colors.darkwhite}
+            semibold
+            size={10}
+            marginRight={sizes.s}>
+            CPU:
+          </Text>
 
-            <Text
-              p
-              color={colors.darkwhite}
-              semibold
-              size={10}
-              marginRight={20}>
-              {data.platform[0].cpu_chipset}
-            </Text>
+          <Text p color={colors.darkwhite} semibold size={10} marginRight={20}>
+            {/* {data.platform[0].cpu_chipset} */}
+            qqqqqq
+          </Text>
+        </Block>
 
-          </Block>
+        <Block row>
+          <Text
+            p
+            color={colors.darkwhite}
+            semibold
+            size={10}
+            marginRight={sizes.s}>
+            Display:
+          </Text>
 
-          <Block row>
+          <Text p color={colors.darkwhite} semibold size={10} marginRight={20}>
+            {/* {data.body.display} */}
+            wwwwww
+          </Text>
+        </Block>
 
-            <Text
-                p
-                color={colors.darkwhite}
-                semibold
-                size={10}
-                marginRight={sizes.s}>
-                Display:
-              </Text>
+        <Block row>
+          <Text
+            p
+            color={colors.darkwhite}
+            semibold
+            size={10}
+            marginRight={sizes.s}>
+            Internal:
+          </Text>
 
-              <Text
-                p
-                color={colors.darkwhite}
-                semibold
-                size={10}
-                marginRight={20}>
-                {data.body.display}
-              </Text>
+          <Text p color={colors.darkwhite} semibold size={10} marginRight={20}>
+            {/* {data.ram}GB RAM + {data.storage[0].size}GB Storage */}
+            Hello
+          </Text>
+        </Block>
 
-            </Block>
+        <Block row>
+          <Text
+            p
+            color={colors.darkwhite}
+            semibold
+            size={10}
+            marginRight={sizes.s}>
+            Battery:
+          </Text>
 
-            <Block row>
+          <Text p color={colors.darkwhite} semibold size={10} marginRight={20}>
+            {/* {data.battery[0].capacity}mAh Litium-{data.battery[0].type_select} */}
+            None
+          </Text>
+        </Block>
 
-            <Text
-                p
-                color={colors.darkwhite}
-                semibold
-                size={10}
-                marginRight={sizes.s}>
-                Internal:
-              </Text>
-
-              <Text
-                p
-                color={colors.darkwhite}
-                semibold
-                size={10}
-                marginRight={20}>
-                {data.ram}GB RAM + {data.storage[0].size}GB Storage
-              </Text>
-
-            </Block>
-
-            <Block row>
-
-            <Text
-                p
-                color={colors.darkwhite}
-                semibold
-                size={10}
-                marginRight={sizes.s}>
-                Battery:
-              </Text>
-
-              <Text
-                p
-                color={colors.darkwhite}
-                semibold
-                size={10}
-                marginRight={20}>
-                {data.battery[0].capacity}mAh  Litium-{data.battery[0].type_select}
-                
-              </Text>
-
-            </Block>
-            
         <TouchableOpacity>
           <Block row flex={0} align="center" marginTop={5}>
             <Text
