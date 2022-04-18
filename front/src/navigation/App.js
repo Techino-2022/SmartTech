@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Platform, StatusBar} from 'react-native';
 import {useFonts} from 'expo-font';
 import AppLoading from 'expo-app-loading';
@@ -7,13 +7,15 @@ import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import Menu from './Menu';
 import {useData, ThemeProvider, TranslationProvider} from '../hooks';
 
-import colors from '../config/colors'
+import ThemeContext from '../config/context';
 
 export default () => {
   const {theme, setTheme} = useData();
+  const them = useContext(ThemeContext);
+  const {colors} = them.theme;
 
   /* set the status bar light for dark theme */
-  StatusBar.setBackgroundColor('#000000')
+  StatusBar.setBackgroundColor('#000000');
   StatusBar.setBarStyle('light-content');
 
   // load custom fonts
@@ -31,12 +33,12 @@ export default () => {
 
   const navigationTheme = {
     colors: {
-      border: colors.gold,
-      text: colors.gold,
-      card: colors.darkgrey,
-      primary: colors.gold,
-      notification: colors.gold,
-      background: colors.lightblack,
+      border: colors.text,
+      text: colors.text,
+      card: colors.card,
+      primary: colors.primary,
+      notification: colors.primary,
+      background: colors.background,
     },
   };
 

@@ -21,7 +21,7 @@ const Switch = ({
   switchStyle,
   style,
   onPress,
-  haptic = true,
+  haptic = false,
   ...props
 }) => {
   const [isChecked, setChecked] = useState(checked);

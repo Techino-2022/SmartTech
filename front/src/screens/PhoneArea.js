@@ -15,26 +15,8 @@ const Home = () => {
   const [tab, setTab] = useState(0);
   const {following, trending} = useData();
   const [products, setProducts] = useState([]);
-  const [isShown, setIsShown] = useState(false);
   const {assets, gradients, sizes} = useTheme();
-  const phones = useApi(getPhones.getAllPhones);
-  // const {list, loading} = useSelector((state) => state.entities.phones);
-  const sta = useSelector((state) => state);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setIsShown(true);
-      const dat = getPhonesByModel('A')(sta);
-      setProducts(dat);
-    }, 5000);
-  }, []);
-
-  // useEffect(() => {
-  //   setLoading(load);
-  //   setTimeout(() => {
-  //     setAllPhones(data);
-  //   }, 5000);
-  // }, [load, data]);
+  const {list, loading} = useSelector((state) => state.entities.phones);
 
   const handleProducts = useCallback(
     (tab) => {
@@ -105,16 +87,15 @@ const Home = () => {
           </Block>
         </Button>
       </Block>
-      {!isShown && <ActivityIndicator visible={true} />}
-      {console.log(products)}
+      {loading && <ActivityIndicator visible={true} />}
       <Block
         scroll
         paddingHorizontal={sizes.padding}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: sizes.l}}>
         <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
-          {isShown &&
-            products.map((product) => (
+          {list &&
+            list.map((product) => (
               <Product
                 type="vertical"
                 data={product}

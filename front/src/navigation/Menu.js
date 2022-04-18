@@ -1,4 +1,10 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {Animated, StyleSheet} from 'react-native';
 
 import {
@@ -8,10 +14,12 @@ import {
 } from '@react-navigation/drawer';
 
 import Screens from './Screens';
-import {Block, Text, Button, Image} from '../components';
+import {Block, Text, Button, Image, Switch} from '../components';
 import {useData, useTheme, useTranslation} from '../hooks';
 
-import colors from '../config/colors'
+import color from '../config/colors';
+import ThemeContext from '../config/context';
+import colors, {light, dark} from '../config/colors';
 
 const Drawer = createDrawerNavigator();
 
@@ -50,7 +58,7 @@ const ScreensStack = () => {
         {
           flex: 1,
           overflow: 'hidden',
-          borderColor: colors.gold,
+          borderColor: color.text,
           borderWidth: isDrawerOpen ? 3 : 0,
         },
       ])}>
@@ -67,7 +75,15 @@ const DrawerContent = (props) => {
   const {isDark, handleIsDark} = useData();
   const [active, setActive] = useState('PhoneArea');
   const {assets, gradients, sizes} = useTheme();
-  const labelColor = colors.gold;
+  const context = useContext(ThemeContext);
+  const {colors} = context.theme;
+  const labelColor = colors.text;
+
+  const handleChangeTheme = () => {
+    context.theme.name === 'light'
+      ? context.setTheme(dark)
+      : context.setTheme(light);
+  };
 
   const handleNavigation = useCallback(
     (to) => {
@@ -76,7 +92,6 @@ const DrawerContent = (props) => {
     },
     [navigation, setActive],
   );
-
 
   // screen list for Drawer menu
   const screens = [
@@ -96,19 +111,20 @@ const DrawerContent = (props) => {
       contentContainerStyle={{paddingBottom: sizes.padding}}>
       <Block paddingHorizontal={sizes.padding}>
         <Block flex={0} row align="center" marginBottom={sizes.l}>
-          <Image source = {require('../images/SmartTechLogo.png')}
+          <Image
+            source={require('../images/SmartTechLogo.png')}
             radius={0}
             width={33}
             height={33}
-            color={colors.gold}
+            color={colors.text}
             marginRight={sizes.sm}
           />
           <Block>
-            <Text size={12} semibold color={colors.gold}>
-            Smart Tech
+            <Text size={14} semibold color={colors.text}>
+              Smart Tech
             </Text>
-            <Text size={12} semibold color={colors.darkwhite}>
-            Best Review of Technoly
+            <Text size={12} semibold color={colors.subTitle}>
+              Best Review of Technoly
             </Text>
           </Block>
         </Block>
@@ -130,13 +146,13 @@ const DrawerContent = (props) => {
                 width={sizes.md}
                 height={sizes.md}
                 marginRight={sizes.s}
-                gradient={gradients[isActive ? 'white' : 'secondary']}>
+                color={isActive ? colors.primary : colors.background}>
                 <Image
                   radius={0}
                   width={14}
                   height={14}
                   source={screen.icon}
-                  color={colors[isActive ? 'black' : 'black']}
+                  color={isActive ? colors.background : colors.text}
                 />
               </Block>
               <Text p semibold={isActive} color={labelColor}>
@@ -146,6 +162,14 @@ const DrawerContent = (props) => {
           );
         })}
 
+        <Block row justify="space-between" marginTop={sizes.sm}>
+          <Text color={labelColor}>{t('darkMode')}</Text>
+          <Switch
+            checked={context.theme.name === 'light' ? false : true}
+            onPress={handleChangeTheme}
+          />
+        </Block>
+
         <Block
           flex={0}
           height={1}
@@ -153,7 +177,6 @@ const DrawerContent = (props) => {
           marginVertical={sizes.sm}
           gradient={gradients.menu}
         />
-
       </Block>
     </DrawerContentScrollView>
   );
@@ -162,9 +185,11 @@ const DrawerContent = (props) => {
 /* drawer menu navigation */
 export default () => {
   const {gradients} = useTheme();
+  const context = useContext(ThemeContext);
+  const {colors} = context.theme;
 
   return (
-    <Block gradient={gradients.black}>
+    <Block gradient={colors.gradient}>
       <Drawer.Navigator
         drawerType="slide"
         overlayColor="transparent"
