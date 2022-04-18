@@ -12,6 +12,7 @@ export default {
 export const light = {
   name: 'light',
   colors: {
+    item: '#fff',
     text: '#252F40',
     primary: '#CB0C9F',
     subTitle: '#455A64',
@@ -49,6 +50,7 @@ export const light = {
 export const dark = {
   name: 'dark',
   colors: {
+    item: '#424242',
     text: '#F0A500',
     primary: '#F0A500',
     subTitle: '#bfbfbf',
@@ -78,7 +80,7 @@ export const dark = {
     dribbble: '#EA4C89',
     icon: '#8392AB',
     blurTint: 'light',
-    link: '#CB0C9F',
+    link: '#F0A500',
     gradient: ['#000', '#141727'],
   },
 };

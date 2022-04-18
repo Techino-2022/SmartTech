@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {TouchableOpacity} from 'react-native';
 
 import Block from './Block';
@@ -6,11 +6,13 @@ import Image from './Image';
 import Text from './Text';
 import {useTheme, useTranslation} from '../hooks';
 
-import colors from '../config/colors';
+import ThemeContext from '../config/context';
 
 const Product = ({image, title, type, linkLabel, data}) => {
   const {t} = useTranslation();
   const {assets, sizes} = useTheme();
+  const context = useContext(ThemeContext);
+  const {colors} = context.theme;
 
   const isHorizontal = type !== 'vertical';
   const CARD_WIDTH = (sizes.width - sizes.padding * 2 - sizes.sm) / 2;
@@ -21,12 +23,17 @@ const Product = ({image, title, type, linkLabel, data}) => {
       flex={0}
       row={isHorizontal}
       marginBottom={sizes.sm}
-      color={colors.lightgrey}
+      color={colors.item}
       width={isHorizontal ? CARD_WIDTH * 2 + sizes.sm : CARD_WIDTH}
-      style={{borderWidth: 1, borderColor: colors.gold}}>
+      style={
+        context.theme.name === 'dark' && {
+          borderWidth: 1,
+          borderColor: colors.text,
+        }
+      }>
       <Image
-        resizeMode="contain"
-        source={{uri: 'https://picsum.photos/200'}}
+        resizeMode="cover"
+        source={{uri: 'https://picsum.photos/600'}}
         style={{
           height: isHorizontal ? 114 : 110,
           width: !isHorizontal ? '100%' : sizes.width / 2.435,
@@ -37,21 +44,21 @@ const Product = ({image, title, type, linkLabel, data}) => {
         justify="space-between"
         paddingLeft={isHorizontal ? sizes.sm : 0}
         paddingBottom={isHorizontal ? sizes.s : 0}>
-        <Text p marginBottom={sizes.s} color={colors.gold}>
+        <Text p marginBottom={sizes.s} color={colors.link}>
           {data.name}
         </Text>
 
         <Block row>
           <Text
             p
-            color={colors.darkwhite}
+            color={colors.subTitle}
             semibold
             size={10}
             marginRight={sizes.s}>
             CPU:
           </Text>
 
-          <Text p color={colors.darkwhite} semibold size={10} marginRight={20}>
+          <Text p color={colors.subTitle} semibold size={10} marginRight={20}>
             {/* {data.platform[0].cpu_chipset} */}
             qqqqqq
           </Text>
@@ -60,14 +67,14 @@ const Product = ({image, title, type, linkLabel, data}) => {
         <Block row>
           <Text
             p
-            color={colors.darkwhite}
+            color={colors.subTitle}
             semibold
             size={10}
             marginRight={sizes.s}>
             Display:
           </Text>
 
-          <Text p color={colors.darkwhite} semibold size={10} marginRight={20}>
+          <Text p color={colors.subTitle} semibold size={10} marginRight={20}>
             {/* {data.body.display} */}
             wwwwww
           </Text>
@@ -76,14 +83,14 @@ const Product = ({image, title, type, linkLabel, data}) => {
         <Block row>
           <Text
             p
-            color={colors.darkwhite}
+            color={colors.subTitle}
             semibold
             size={10}
             marginRight={sizes.s}>
             Internal:
           </Text>
 
-          <Text p color={colors.darkwhite} semibold size={10} marginRight={20}>
+          <Text p color={colors.subTitle} semibold size={10} marginRight={20}>
             {/* {data.ram}GB RAM + {data.storage[0].size}GB Storage */}
             Hello
           </Text>
@@ -92,14 +99,14 @@ const Product = ({image, title, type, linkLabel, data}) => {
         <Block row>
           <Text
             p
-            color={colors.darkwhite}
+            color={colors.subTitle}
             semibold
             size={10}
             marginRight={sizes.s}>
             Battery:
           </Text>
 
-          <Text p color={colors.darkwhite} semibold size={10} marginRight={20}>
+          <Text p color={colors.subTitle} semibold size={10} marginRight={20}>
             {/* {data.battery[0].capacity}mAh Litium-{data.battery[0].type_select} */}
             None
           </Text>
@@ -109,13 +116,13 @@ const Product = ({image, title, type, linkLabel, data}) => {
           <Block row flex={0} align="center" marginTop={5}>
             <Text
               p
-              color={colors.darkwhite}
+              color={colors.link}
               semibold
               size={sizes.linkSize}
               marginRight={sizes.s}>
               More Details
             </Text>
-            <Image source={assets.arrow} color={colors.darkwhite} />
+            <Image source={assets.arrow} color={colors.link} />
           </Block>
         </TouchableOpacity>
       </Block>
