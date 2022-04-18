@@ -32,10 +32,10 @@ export default slice.reducer;
 const url = '/phones';
 
 export const loadPhones = () => (dispatch, getState) => {
-  const {lastFetch} = getState().entities.phones;
+  const {lastfetch} = getState().entities.phones;
 
-  // const diffInMinutes = moment().diff(moment(lastFetch), "minutes");
-  // if (diffInMinutes < 10) return;
+  const diffInMinutes = moment().diff(moment(lastfetch), 'minutes');
+  if (diffInMinutes < 1) return;
 
   return dispatch(
     apiCallBegan({

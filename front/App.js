@@ -13,9 +13,6 @@ const store = configureStore();
 
 export default function App() {
   const [theme, setTheme] = useState(dark);
-  useEffect(() => {
-    store.dispatch(loadPhones());
-  }, []);
   return (
     <Provider store={store}>
       <ThemeContext.Provider value={{theme, setTheme}}>

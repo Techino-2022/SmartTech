@@ -1,11 +1,12 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {useData, useTheme, useTranslation} from '../hooks';
 import useApi from '../hooks/useApi';
 import {Block, Button, Image, Input, Product, Text} from '../components';
 import getPhones from '../api/phone';
 import {getPhonesByModel} from '../store/phones';
+import {loadPhones} from '../store/phones';
 
 import colors from '../config/colors';
 import ActivityIndicator from '../components/ActivityIndicator';
@@ -16,7 +17,10 @@ const Home = () => {
   const {following, trending} = useData();
   const [products, setProducts] = useState([]);
   const {assets, gradients, sizes} = useTheme();
-  const {list, loading} = useSelector((state) => state.entities.phones);
+  const dispatch = useDispatch();
+  const {list, loading, lastfetch} = useSelector(
+    (state) => state.entities.phones,
+  );
 
   const handleProducts = useCallback(
     (tab) => {
@@ -25,6 +29,10 @@ const Home = () => {
     },
     [following, trending, setTab, setProducts],
   );
+
+  useEffect(() => {
+    dispatch(loadPhones());
+  }, [dispatch]);
 
   return (
     <Block>
