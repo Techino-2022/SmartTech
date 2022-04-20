@@ -15,7 +15,7 @@ const Home = () => {
   const {t} = useTranslation();
   const [tab, setTab] = useState('vertical');
   const {following, trending} = useData();
-  const [products, setProducts] = useState([]);
+  const [phones, setPhones] = useState([]);
   const {assets, gradients, sizes} = useTheme();
   const dispatch = useDispatch();
   const context = useContext(ThemeContext);
@@ -32,11 +32,31 @@ const Home = () => {
     dispatch(loadPhones());
   }, [dispatch]);
 
+  useEffect(() => {
+    setPhones(list);
+  }, [list]);
+
+  const handleSearch = (name) => {
+    if (name) {
+      const filtered = list.filter((p) =>
+        p.name.toLowerCase().includes(name.toLowerCase()),
+      );
+      setPhones(filtered);
+    } else {
+      setPhones(list);
+    }
+  };
+
   return (
     <Block>
       {/* search input */}
       <Block color={colors.card} flex={0} padding={sizes.padding}>
-        <Input search placeholder={t('common.search')} color={colors.text} />
+        <Input
+          search
+          placeholder={t('common.search')}
+          color={colors.text}
+          onChange={handleSearch}
+        />
       </Block>
 
       {/* toggle products list */}
@@ -101,7 +121,7 @@ const Home = () => {
         contentContainerStyle={{paddingBottom: sizes.l}}>
         <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
           {!loading &&
-            list.map((product) => (
+            phones.map((product) => (
               <Product type={tab} data={product} key={`card-${product?.id}`} />
             ))}
         </Block>

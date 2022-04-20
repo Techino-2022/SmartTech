@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 import {
   Image,
   TextInput,
@@ -13,8 +13,7 @@ import Text from './Text';
 
 import useTheme from '../hooks/useTheme';
 import {IInputProps} from '../constants/types';
-
-import colors from '../config/colors'
+import ThemeContext from '../config/context';
 
 const Input = ({
   id = 'Input',
@@ -42,10 +41,13 @@ const Input = ({
   marginLeft,
   onFocus,
   onBlur,
+  onChange,
   ...props
 }) => {
   const {assets, sizes} = useTheme();
   const [isFocused, setFocused] = useState(false);
+  const context = useContext(ThemeContext);
+  const {colors} = context.theme;
 
   const handleFocus = useCallback(
     (event, focus) => {
@@ -101,7 +103,7 @@ const Input = ({
       minHeight: sizes.inputHeight,
       borderRadius: sizes.inputRadius,
       borderWidth: isFocused ? 2 : sizes.inputBorder,
-      borderColor: isFocused ? colors.focus : inputColor,
+      borderColor: isFocused ? colors.text : inputColor,
     },
   ]);
 
@@ -111,7 +113,7 @@ const Input = ({
       zIndex: 2,
       height: '100%',
       fontSize: sizes.p,
-      color: colors.input,
+      color: colors.text,
       paddingHorizontal: sizes.inputPadding,
     },
   ]);
@@ -123,7 +125,7 @@ const Input = ({
   return (
     <Block flex={0} style={inputBoxStyles}>
       {label && (
-        <Text bold marginBottom={sizes.s} color={colors.gold}>
+        <Text bold marginBottom={sizes.s} color={colors.text}>
           {label}
         </Text>
       )}
@@ -131,7 +133,7 @@ const Input = ({
         {search && assets.search && (
           <Image
             source={assets.search}
-            style={{marginLeft: sizes.inputPadding, tintColor: colors.icon}}
+            style={{marginLeft: sizes.inputPadding, tintColor: colors.text}}
           />
         )}
         {icon && (
@@ -148,6 +150,7 @@ const Input = ({
           placeholderTextColor={inputColor}
           onFocus={(event) => handleFocus(event, true)}
           onBlur={(event) => handleFocus(event, false)}
+          onChangeText={(text) => onChange(text)}
         />
         {danger && assets.warning && (
           <Image

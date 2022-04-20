@@ -33,7 +33,7 @@ const Product = ({image, title, type, linkLabel, data}) => {
       }>
       <Image
         resizeMode="cover"
-        source={{uri: 'https://picsum.photos/600'}}
+        source={{uri: data.image_url[0].image}}
         style={{
           height: isHorizontal ? 114 : 110,
           width: !isHorizontal ? '100%' : sizes.width / 2.435,
@@ -55,12 +55,11 @@ const Product = ({image, title, type, linkLabel, data}) => {
             semibold
             size={10}
             marginRight={sizes.s}>
-            CPU:
+            Brand :
           </Text>
 
           <Text p color={colors.subTitle} semibold size={10} marginRight={20}>
-            {/* {data.platform[0].cpu_chipset} */}
-            qqqqqq
+            {data.brand[0].name}
           </Text>
         </Block>
 
@@ -71,44 +70,11 @@ const Product = ({image, title, type, linkLabel, data}) => {
             semibold
             size={10}
             marginRight={sizes.s}>
-            Display:
+            Storage:
           </Text>
 
           <Text p color={colors.subTitle} semibold size={10} marginRight={20}>
-            {/* {data.body.display} */}
-            wwwwww
-          </Text>
-        </Block>
-
-        <Block row>
-          <Text
-            p
-            color={colors.subTitle}
-            semibold
-            size={10}
-            marginRight={sizes.s}>
-            Internal:
-          </Text>
-
-          <Text p color={colors.subTitle} semibold size={10} marginRight={20}>
-            {/* {data.ram}GB RAM + {data.storage[0].size}GB Storage */}
-            Hello
-          </Text>
-        </Block>
-
-        <Block row>
-          <Text
-            p
-            color={colors.subTitle}
-            semibold
-            size={10}
-            marginRight={sizes.s}>
-            Battery:
-          </Text>
-
-          <Text p color={colors.subTitle} semibold size={10} marginRight={20}>
-            {/* {data.battery[0].capacity}mAh Litium-{data.battery[0].type_select} */}
-            None
+            {`${data.ram.number}GB - ${parseInt(data.storage[0].size)}GB`}
           </Text>
         </Block>
 
