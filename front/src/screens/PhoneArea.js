@@ -47,6 +47,11 @@ const Home = () => {
     }
   };
 
+  const handleModel = (model) => {
+    const data = list.filter((d) => d.model === model);
+    setPhones(data);
+  };
+
   return (
     <Block>
       {/* search input */}
@@ -78,23 +83,14 @@ const Home = () => {
               width={sizes.socialIconSize}
               height={sizes.socialIconSize}
               color={colors.background}>
-              <Image source={assets.extras} color={colors.text} radius={0} />
+              <Text color={colors.text} bold>
+                V
+              </Text>
             </Block>
-            <Text color={colors.subTitle}>Vertical</Text>
           </Block>
         </Button>
-        <Block
-          gray
-          flex={0}
-          width={1}
-          marginHorizontal={sizes.sm}
-          height={sizes.socialIconSize}
-        />
         <Button onPress={() => handleProducts(1)}>
           <Block row align="center">
-            <Text color={colors.subTitle} marginRight={sizes.s}>
-              Horizontal
-            </Text>
             <Block
               flex={0}
               radius={6}
@@ -104,11 +100,76 @@ const Home = () => {
               width={sizes.socialIconSize}
               height={sizes.socialIconSize}
               color={colors.background}>
-              <Image
-                radius={0}
-                color={colors.text}
-                source={assets.documentation}
-              />
+              <Text color={colors.text} bold>
+                H
+              </Text>
+            </Block>
+          </Block>
+        </Button>
+        <Block
+          gray
+          flex={0}
+          width={1}
+          marginHorizontal={sizes.sm}
+          height={sizes.socialIconSize}
+        />
+        <Button onPress={() => handleModel('A')}>
+          <Block row align="center">
+            <Block
+              flex={0}
+              radius={6}
+              align="center"
+              justify="center"
+              width={sizes.socialIconSize}
+              height={sizes.socialIconSize}
+              color={colors.background}>
+              <Text color={colors.text} bold>
+                A
+              </Text>
+            </Block>
+          </Block>
+        </Button>
+        <Button onPress={() => handleModel('B')}>
+          <Block
+            flex={0}
+            radius={6}
+            align="center"
+            justify="center"
+            width={sizes.socialIconSize}
+            height={sizes.socialIconSize}
+            color={colors.background}>
+            <Text color={colors.text} bold>
+              B
+            </Text>
+          </Block>
+        </Button>
+        <Button onPress={() => handleModel('C')}>
+          <Block
+            flex={0}
+            radius={6}
+            align="center"
+            justify="center"
+            width={sizes.socialIconSize}
+            height={sizes.socialIconSize}
+            color={colors.background}>
+            <Text color={colors.text} bold>
+              C
+            </Text>
+          </Block>
+        </Button>
+        <Button onPress={() => handleModel('D')}>
+          <Block row align="center">
+            <Block
+              flex={0}
+              radius={6}
+              align="center"
+              justify="center"
+              width={sizes.socialIconSize}
+              height={sizes.socialIconSize}
+              color={colors.background}>
+              <Text color={colors.text} bold>
+                D
+              </Text>
             </Block>
           </Block>
         </Button>
