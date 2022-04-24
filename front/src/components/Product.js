@@ -8,7 +8,7 @@ import {useTheme, useTranslation} from '../hooks';
 
 import ThemeContext from '../config/context';
 
-const Product = ({image, title, type, linkLabel, data}) => {
+const Product = ({type, data}) => {
   const {t} = useTranslation();
   const {assets, sizes} = useTheme();
   const context = useContext(ThemeContext);
@@ -32,7 +32,7 @@ const Product = ({image, title, type, linkLabel, data}) => {
         }
       }>
       <Image
-        resizeMode="cover"
+        resizeMode="contain"
         source={{uri: data.image_url[0].image}}
         style={{
           height: isHorizontal ? 114 : 110,

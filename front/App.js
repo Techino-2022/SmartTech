@@ -8,8 +8,11 @@ import {DataProvider} from './src/hooks';
 import AppNavigation from './src/navigation/App';
 import {dark} from './src/config/colors';
 import ThemeContext from './src/config/context';
+import {LogBox} from 'react-native';
 
 const store = configureStore();
+
+LogBox.ignoreLogs(['SerializableStateInvariantMiddleware']);
 
 export default function App() {
   const [theme, setTheme] = useState(dark);

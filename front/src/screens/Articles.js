@@ -1,37 +1,46 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
 
 import {useData, useTheme} from '../hooks';
 import {Block, Button, Article, Text} from '../components';
-
-import colors from '../config/colors'
+import colors from '../config/colors';
+import {loadPosts} from '../store/posts';
+import {categories} from '../constants/categories';
 
 const Articles = () => {
   const data = useData();
+  const dispatch = useDispatch();
   const [selected, setSelected] = useState();
   const [articles, setArticles] = useState([]);
-  const [categories, setCategories] = useState([]);
   const {gradients, sizes} = useTheme();
-
-  // init articles
-  useEffect(() => {
-    setArticles(data?.articles);
-    setCategories(data?.categories);
-    setSelected(data?.categories[0]);
-  }, [data.articles, data.categories]);
+  const [posts, setPosts] = useState([]);
+  const {list, loading} = useSelector((state) => state.entities.posts);
 
   // update articles on category change
+
   useEffect(() => {
-    const category = data?.categories?.find(
-      (category) => category?.id === selected?.id,
-    );
+    dispatch(loadPosts());
+  }, [dispatch]);
 
-    const newArticles = data?.articles?.filter(
-      (article) => article?.category?.id === category?.id,
-    );
+  useEffect(() => {
+    setPosts(list);
+    setSelected(categories[0]);
+  }, [list]);
 
-    setArticles(newArticles);
-  }, [data, selected, setArticles]);
+  const filterByCategory = (category) => {
+    setSelected(category);
+    if (category.name === 'All') return setPosts(list);
+    const newData = [];
+    list.map((x) => {
+      x.category.map((c) => {
+        if (c.name === category.name) {
+          newData.push(x);
+        }
+      });
+    });
+    setPosts(newData);
+  };
 
   return (
     <Block>
@@ -42,18 +51,16 @@ const Articles = () => {
           horizontal
           renderToHardwareTextureAndroid
           showsHorizontalScrollIndicator={false}
-          contentOffset={{x: -sizes.padding, y: 0}}
-          >
+          contentOffset={{x: -sizes.padding, y: 0}}>
           {categories?.map((category) => {
-            const isSelected = category?.id === selected?.id;
+            const isSelected = category.name === selected?.name;
             return (
               <Button
                 radius={sizes.m}
                 marginHorizontal={sizes.s}
-                key={`category-${category?.id}}`}
-                onPress={() => setSelected(category)}
-                gradient={gradients?.[isSelected ? 'warning' : 'light']}
-                >
+                key={`category-${category?.name}}`}
+                onPress={() => filterByCategory(category)}
+                gradient={gradients?.[isSelected ? 'warning' : 'light']}>
                 <Text
                   p
                   bold={isSelected}
@@ -70,12 +77,12 @@ const Articles = () => {
       </Block>
 
       <FlatList
-        data={articles}
+        data={posts}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => `${item?.id}`}
         style={{paddingHorizontal: sizes.padding}}
         contentContainerStyle={{paddingBottom: sizes.l}}
-        renderItem={({item}) => <Article {...item} />}
+        renderItem={({item}) => <Article data={item} />}
       />
     </Block>
   );
