@@ -4,10 +4,11 @@ import ThemeContext from '../config/context';
 import React, {useContext} from 'react';
 import {useTheme} from '../hooks';
 
-export default function FilterButton({title, onPress, choice}) {
+export default function FilterButton({title, onPress, choice, selected}) {
   const {assets, gradients, sizes} = useTheme();
   const context = useContext(ThemeContext);
   const {colors} = context.theme;
+  const {gradient} = context.theme;
 
   return (
     <Button onPress={() => onPress(choice)}>
@@ -20,8 +21,14 @@ export default function FilterButton({title, onPress, choice}) {
           marginRight={sizes.s}
           width={sizes.socialIconSize}
           height={sizes.socialIconSize}
-          color={colors.background}>
-          <Text color={colors.text} bold>
+          gradient={
+            selected === choice
+              ? gradients[gradient.gr1]
+              : gradients[gradient.gr2]
+          }>
+          <Text
+            color={selected === choice ? colors.background : colors.text}
+            bold>
             {title}
           </Text>
         </Block>

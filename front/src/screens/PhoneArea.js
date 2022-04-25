@@ -22,6 +22,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const context = useContext(ThemeContext);
   const {colors} = context.theme;
+  const {gradient} = context.theme;
   const {list, loading, lastfetch} = useSelector(
     (state) => state.entities.phones,
   );
@@ -50,6 +51,7 @@ const Home = () => {
   };
 
   const handleModel = (model) => {
+    setSelected(model);
     if (model === 'all') {
       return setPhones(list);
     }
@@ -87,8 +89,14 @@ const Home = () => {
               marginRight={sizes.s}
               width={sizes.socialIconSize}
               height={sizes.socialIconSize}
-              color={colors.background}>
-              <Text color={colors.text} bold>
+              gradient={
+                tab === 'vertical'
+                  ? gradients[gradient.gr1]
+                  : gradients[gradient.gr2]
+              }>
+              <Text
+                color={tab === 'vertical' ? colors.background : colors.text}
+                bold>
                 V
               </Text>
             </Block>
@@ -104,8 +112,14 @@ const Home = () => {
               marginRight={sizes.s}
               width={sizes.socialIconSize}
               height={sizes.socialIconSize}
-              color={colors.background}>
-              <Text color={colors.text} bold>
+              gradient={
+                tab !== 'vertical'
+                  ? gradients[gradient.gr1]
+                  : gradients[gradient.gr2]
+              }>
+              <Text
+                color={tab !== 'vertical' ? colors.background : colors.text}
+                bold>
                 H
               </Text>
             </Block>
@@ -126,13 +140,33 @@ const Home = () => {
           isSeleted
         />
 
-        <FilterButton title="A" choice="A" onPress={handleModel} />
+        <FilterButton
+          title="A"
+          choice="A"
+          onPress={handleModel}
+          selected={selected}
+        />
 
-        <FilterButton title="B" choice="B" onPress={handleModel} />
+        <FilterButton
+          title="B"
+          choice="B"
+          onPress={handleModel}
+          selected={selected}
+        />
 
-        <FilterButton title="C" choice="C" onPress={handleModel} />
+        <FilterButton
+          title="C"
+          choice="C"
+          onPress={handleModel}
+          selected={selected}
+        />
 
-        <FilterButton title="D" choice="D" onPress={handleModel} />
+        <FilterButton
+          title="D"
+          choice="D"
+          onPress={handleModel}
+          selected={selected}
+        />
       </Block>
       {loading && <ActivityIndicator visible={true} />}
       <Block
