@@ -13,6 +13,7 @@ const Article = ({data, user, onPress}) => {
   const context = useContext(ThemeContext);
   const {colors} = context.theme;
   const {gradient} = context.theme;
+  const date = new Date(data.published_at);
 
   return (
     <TouchableWithoutFeedback onPress={onPress}>
@@ -76,7 +77,7 @@ const Article = ({data, user, onPress}) => {
             color={colors.primary}
           />
           <Text p size={12} semibold color={colors.subTitle}>
-            {data.category[0].name}
+            {data.author.username}
           </Text>
           <Text p bold marginHorizontal={sizes.s} color={colors.subTitle}>
             •
@@ -87,7 +88,7 @@ const Article = ({data, user, onPress}) => {
             color={colors.primary}
           />
           <Text p size={12} semibold color={colors.subTitle}>
-            {data.category[1].name}
+            {date.toDateString()}
           </Text>
         </Block>
       </Block>
