@@ -1,34 +1,22 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {TouchableWithoutFeedback} from 'react-native';
 
 import Text from './Text';
 import Block from './Block';
 import Image from './Image';
 import {useTheme} from '../hooks';
-import {IArticle} from '../constants/types';
 
-import colors from '../config/colors';
+import ThemeContext from '../config/context';
 
-const Article = ({
-  data,
-  title,
-  description,
-  image,
-  category,
-  rating,
-  location,
-  user,
-  onPress,
-}) => {
+const Article = ({data, user, onPress}) => {
   const {gradients, icons, sizes} = useTheme();
+  const context = useContext(ThemeContext);
+  const {colors} = context.theme;
+  const {gradient} = context.theme;
 
   return (
     <TouchableWithoutFeedback onPress={onPress}>
-      <Block
-        card
-        padding={sizes.sm}
-        marginTop={sizes.sm}
-        color={colors.lightgrey}>
+      <Block card padding={sizes.sm} marginTop={sizes.sm} color={colors.item}>
         <Image
           height={170}
           resizeMode="cover"
@@ -43,7 +31,7 @@ const Article = ({
             marginTop={sizes.s}
             transform="uppercase"
             marginLeft={sizes.xs}
-            gradient={gradients.warning}>
+            gradient={gradients[gradient.gr1]}>
             {data?.title}
           </Text>
         )}
@@ -55,7 +43,7 @@ const Article = ({
             marginTop={sizes.s}
             marginLeft={sizes.xs}
             marginBottom={sizes.sm}
-            color={colors.lightwhite}>
+            color={colors.title}>
             {data.temp_context}
           </Text>
         )}
@@ -68,10 +56,10 @@ const Article = ({
               width={sizes.xl}
               height={sizes.xl}
               source={{uri: user?.avatar}}
-              style={{backgroundColor: colors.darkwhite}}
+              style={{backgroundColor: colors.subTitle}}
             />
             <Block justify="center" marginLeft={sizes.s}>
-              <Text p semibold color={colors.darkwhite}>
+              <Text p semibold color={colors.subTitle}>
                 {user?.name}
               </Text>
               <Text p gray></Text>
@@ -79,26 +67,26 @@ const Article = ({
           </Block>
         )}
 
-        {/* location & rating */}
+        {/* user and  */}
 
         <Block row align="center">
           <Image
             source={icons.location}
             marginRight={sizes.s}
-            color={colors.gold}
+            color={colors.primary}
           />
-          <Text p size={12} semibold color={colors.darkwhite}>
+          <Text p size={12} semibold color={colors.subTitle}>
             {data.category[0].name}
           </Text>
-          <Text p bold marginHorizontal={sizes.s} color={colors.darkwhite}>
+          <Text p bold marginHorizontal={sizes.s} color={colors.subTitle}>
             •
           </Text>
           <Image
             source={icons.star}
             marginRight={sizes.s}
-            color={colors.gold}
+            color={colors.primary}
           />
-          <Text p size={12} semibold color={colors.darkwhite}>
+          <Text p size={12} semibold color={colors.subTitle}>
             {data.category[1].name}
           </Text>
         </Block>

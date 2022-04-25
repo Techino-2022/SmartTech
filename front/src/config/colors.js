@@ -12,6 +12,7 @@ export default {
 export const light = {
   name: 'light',
   colors: {
+    title: '#252f40',
     item: '#fff',
     text: '#252F40',
     primary: '#CB0C9F',
@@ -54,6 +55,7 @@ export const light = {
 export const dark = {
   name: 'dark',
   colors: {
+    title: '#fff',
     item: '#424242',
     text: '#F0A500',
     primary: '#F0A500',
