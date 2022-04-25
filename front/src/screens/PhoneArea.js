@@ -10,10 +10,12 @@ import {loadPhones} from '../store/phones';
 
 import ActivityIndicator from '../components/ActivityIndicator';
 import ThemeContext from '../config/context';
+import FilterButton from '../components/FilterButton';
 
 const Home = () => {
   const {t} = useTranslation();
   const [tab, setTab] = useState('vertical');
+  const [selected, setSelected] = useState('all');
   const {following, trending} = useData();
   const [phones, setPhones] = useState([]);
   const {assets, gradients, sizes} = useTheme();
@@ -116,82 +118,21 @@ const Home = () => {
           marginHorizontal={sizes.sm}
           height={sizes.socialIconSize}
         />
-        <Button onPress={() => handleModel('all')}>
-          <Block row align="center">
-            <Block
-              flex={0}
-              radius={6}
-              align="center"
-              justify="center"
-              width={sizes.socialIconSize}
-              height={sizes.socialIconSize}
-              color={colors.background}>
-              <Text color={colors.text} bold>
-                All
-              </Text>
-            </Block>
-          </Block>
-        </Button>
-        <Button onPress={() => handleModel('A')}>
-          <Block row align="center">
-            <Block
-              flex={0}
-              radius={6}
-              align="center"
-              justify="center"
-              width={sizes.socialIconSize}
-              height={sizes.socialIconSize}
-              color={colors.background}>
-              <Text color={colors.text} bold>
-                A
-              </Text>
-            </Block>
-          </Block>
-        </Button>
-        <Button onPress={() => handleModel('B')}>
-          <Block
-            flex={0}
-            radius={6}
-            align="center"
-            justify="center"
-            width={sizes.socialIconSize}
-            height={sizes.socialIconSize}
-            color={colors.background}>
-            <Text color={colors.text} bold>
-              B
-            </Text>
-          </Block>
-        </Button>
-        <Button onPress={() => handleModel('C')}>
-          <Block
-            flex={0}
-            radius={6}
-            align="center"
-            justify="center"
-            width={sizes.socialIconSize}
-            height={sizes.socialIconSize}
-            color={colors.background}>
-            <Text color={colors.text} bold>
-              C
-            </Text>
-          </Block>
-        </Button>
-        <Button onPress={() => handleModel('D')}>
-          <Block row align="center">
-            <Block
-              flex={0}
-              radius={6}
-              align="center"
-              justify="center"
-              width={sizes.socialIconSize}
-              height={sizes.socialIconSize}
-              color={colors.background}>
-              <Text color={colors.text} bold>
-                D
-              </Text>
-            </Block>
-          </Block>
-        </Button>
+        <FilterButton
+          title="All"
+          choice="all"
+          onPress={handleModel}
+          selected={selected}
+          isSeleted
+        />
+
+        <FilterButton title="A" choice="A" onPress={handleModel} />
+
+        <FilterButton title="B" choice="B" onPress={handleModel} />
+
+        <FilterButton title="C" choice="C" onPress={handleModel} />
+
+        <FilterButton title="D" choice="D" onPress={handleModel} />
       </Block>
       {loading && <ActivityIndicator visible={true} />}
       <Block

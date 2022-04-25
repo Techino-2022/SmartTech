@@ -22,7 +22,7 @@ export default () => {
       <Stack.Screen
         name="Articles"
         component={Articles}
-        options={{title: t('navigation.articles')}}
+        options={{title: 'Artciles'}}
       />
 
       <Stack.Screen
