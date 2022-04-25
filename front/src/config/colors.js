@@ -45,6 +45,10 @@ export const light = {
     link: '#CB0C9F',
     gradient: ['#EBEFF4', '#CED4DA'],
   },
+  gradient: {
+    gr1: 'primary',
+    gr2: 'light',
+  },
 };
 
 export const dark = {
@@ -82,5 +86,9 @@ export const dark = {
     blurTint: 'light',
     link: '#F0A500',
     gradient: ['#000', '#141727'],
+  },
+  gradient: {
+    gr1: 'warning',
+    gr2: 'dark',
   },
 };

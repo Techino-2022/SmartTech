@@ -1,12 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {FlatList} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 
 import {useData, useTheme} from '../hooks';
 import {Block, Button, Article, Text} from '../components';
-import colors from '../config/colors';
 import {loadPosts} from '../store/posts';
 import {categories} from '../constants/categories';
+import ActivityIndicator from '../components/ActivityIndicator';
+import ThemeContext from '../config/context';
 
 const Articles = () => {
   const data = useData();
@@ -16,6 +17,9 @@ const Articles = () => {
   const {gradients, sizes} = useTheme();
   const [posts, setPosts] = useState([]);
   const {list, loading} = useSelector((state) => state.entities.posts);
+  const context = useContext(ThemeContext);
+  const {colors} = context.theme;
+  const {gradient} = context.theme;
 
   // update articles on category change
 
@@ -45,7 +49,11 @@ const Articles = () => {
   return (
     <Block>
       {/* categories list */}
-      <Block color={colors.black} row flex={0} paddingVertical={sizes.padding}>
+      <Block
+        color={colors.background}
+        row
+        flex={0}
+        paddingVertical={sizes.padding}>
         <Block
           scroll
           horizontal
@@ -60,12 +68,17 @@ const Articles = () => {
                 marginHorizontal={sizes.s}
                 key={`category-${category?.name}}`}
                 onPress={() => filterByCategory(category)}
-                gradient={gradients?.[isSelected ? 'warning' : 'light']}>
+                gradient={
+                  gradients?.[isSelected ? gradient.gr1 : gradient.gr2]
+                }>
                 <Text
                   p
                   bold={isSelected}
-                  white={isSelected}
-                  black={!isSelected}
+                  color={
+                    !isSelected && context.theme.name === 'light'
+                      ? 'black'
+                      : 'white'
+                  }
                   transform="capitalize"
                   marginHorizontal={sizes.m}>
                   {category?.name}
@@ -75,7 +88,7 @@ const Articles = () => {
           })}
         </Block>
       </Block>
-
+      {loading && <ActivityIndicator visible={true} />}
       <FlatList
         data={posts}
         showsVerticalScrollIndicator={false}
