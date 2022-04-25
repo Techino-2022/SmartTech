@@ -48,6 +48,9 @@ const Home = () => {
   };
 
   const handleModel = (model) => {
+    if (model === 'all') {
+      return setPhones(list);
+    }
     const data = list.filter((d) => d.model === model);
     setPhones(data);
   };
@@ -113,6 +116,22 @@ const Home = () => {
           marginHorizontal={sizes.sm}
           height={sizes.socialIconSize}
         />
+        <Button onPress={() => handleModel('all')}>
+          <Block row align="center">
+            <Block
+              flex={0}
+              radius={6}
+              align="center"
+              justify="center"
+              width={sizes.socialIconSize}
+              height={sizes.socialIconSize}
+              color={colors.background}>
+              <Text color={colors.text} bold>
+                All
+              </Text>
+            </Block>
+          </Block>
+        </Button>
         <Button onPress={() => handleModel('A')}>
           <Block row align="center">
             <Block

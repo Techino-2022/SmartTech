@@ -45,7 +45,7 @@ const Product = ({type, data}) => {
         paddingLeft={isHorizontal ? sizes.sm : 0}
         paddingBottom={isHorizontal ? sizes.s : 0}>
         <Text p marginBottom={sizes.s} color={colors.link}>
-          {data.name}
+          {`${data.brand[0].name} ${data.name}`}
         </Text>
 
         <Block row>
@@ -55,11 +55,7 @@ const Product = ({type, data}) => {
             semibold
             size={10}
             marginRight={sizes.s}>
-            Brand :
-          </Text>
-
-          <Text p color={colors.subTitle} semibold size={10} marginRight={20}>
-            {data.brand[0].name}
+            {`Type: ${data.model}`}
           </Text>
         </Block>
 

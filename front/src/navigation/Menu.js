@@ -19,7 +19,7 @@ import {useData, useTheme, useTranslation} from '../hooks';
 
 import color from '../config/colors';
 import ThemeContext from '../config/context';
-import colors, {light, dark} from '../config/colors';
+import {light, dark} from '../config/colors';
 
 const Drawer = createDrawerNavigator();
 
@@ -27,6 +27,8 @@ const Drawer = createDrawerNavigator();
 const ScreensStack = () => {
   const isDrawerOpen = useIsDrawerOpen();
   const animation = useRef(new Animated.Value(0)).current;
+  const context = useContext(ThemeContext);
+  const {colors} = context.theme;
 
   const scale = animation.interpolate({
     inputRange: [0, 1],
@@ -58,8 +60,10 @@ const ScreensStack = () => {
         {
           flex: 1,
           overflow: 'hidden',
-          borderColor: color.text,
-          borderWidth: isDrawerOpen ? 3 : 0,
+          // using gold color for dark mode
+          // and black color for brightness mode
+          borderColor: colors.text,
+          borderWidth: isDrawerOpen ? 2 : 0,
         },
       ])}>
       {/*  */}
@@ -77,6 +81,7 @@ const DrawerContent = (props) => {
   const {assets, gradients, sizes} = useTheme();
   const context = useContext(ThemeContext);
   const {colors} = context.theme;
+  const {gradient} = context.theme;
   const labelColor = colors.text;
 
   const handleChangeTheme = () => {
@@ -146,7 +151,11 @@ const DrawerContent = (props) => {
                 width={sizes.md}
                 height={sizes.md}
                 marginRight={sizes.s}
-                color={isActive ? colors.primary : colors.background}>
+                gradient={
+                  isActive ? gradients[gradient.gr1] : gradients[gradient.gr2]
+                }
+                // color={isActive ? gradients[gradient.gr2] : colors.background}>
+              >
                 <Image
                   radius={0}
                   width={14}
