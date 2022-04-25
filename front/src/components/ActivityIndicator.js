@@ -8,6 +8,7 @@ function ActivityIndicator({visible = false}) {
       autoPlay
       loop
       source={require('../assets/animation/loading.json')}
+      style={{zIndex: 999}}
     />
   );
 }

@@ -96,6 +96,8 @@ const Articles = () => {
         style={{paddingHorizontal: sizes.padding}}
         contentContainerStyle={{paddingBottom: sizes.l}}
         renderItem={({item}) => <Article data={item} />}
+        refreshing={loading}
+        onRefresh={() => dispatch(loadPosts())}
       />
     </Block>
   );
