@@ -11,6 +11,7 @@ import {loadPhones} from '../store/phones';
 import ActivityIndicator from '../components/ActivityIndicator';
 import ThemeContext from '../config/context';
 import FilterButton from '../components/FilterButton';
+import {RefreshControl} from 'react-native';
 
 const Home = () => {
   const {t} = useTranslation();
@@ -171,6 +172,12 @@ const Home = () => {
       {loading && <ActivityIndicator visible={true} />}
       <Block
         scroll
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={() => dispatch(loadPhones())}
+          />
+        }
         paddingHorizontal={sizes.padding}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: sizes.l}}>
