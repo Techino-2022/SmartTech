@@ -68,20 +68,31 @@ const ArticleScreen = ({route}) => {
             radius={sizes.sm}
             shadow={!isAndroid} // disabled shadow on Android due to blur overlay + elevation issue
             marginTop={-sizes.l}
+            marginBottom={15}
             marginHorizontal="8%"
             color={colors.item}>
-            <Block paddingHorizontal={sizes.sm}>
+            <Block paddingHorizontal={sizes.sm} paddingVertical={10}>
               <Text
                 h5
                 semibold
                 marginBottom={sizes.s}
                 align="center"
                 marginTop={sizes.sm}
-                size={17}
+                size={18}
                 color={colors.primary}>
                 {data.title}
               </Text>
             </Block>
+            <Block align="center" justify="center">
+              <Image
+                source={require('../assets/images/divider1x.png')}
+                tintColor={colors.primary}
+                align="center"
+                width={250}
+                resizeMode="contain"
+              />
+            </Block>
+
             <Block
               row
               flex={0}
@@ -105,28 +116,37 @@ const ArticleScreen = ({route}) => {
                   size={20}
                   color={colors.primary}
                 />
-                <Text color={colors.subTitle}>{date.toDateString()}</Text>
+                <Text color={colors.subTitle} size={13}>
+                  {date.toDateString()}
+                </Text>
               </Block>
               <Block align="center">
                 <FontAwesome name="star" size={18} color={colors.primary} />
-                <Text color={colors.subTitle}>4.5</Text>
+                <Text color={colors.subTitle}>{data.rating}</Text>
               </Block>
             </Block>
           </Block>
 
           {/* profile: about me */}
           <Block paddingHorizontal={sizes.sm}>
-            <Text
-              h5
-              semibold
-              marginBottom={sizes.s}
-              marginTop={sizes.sm}
-              color={colors.primary}>
-              {data.title}
-            </Text>
-            <Text p lineHeight={26} color={colors.subTitle}>
-              {data.temp_context}
-            </Text>
+            {data.descriptions.map((item) => (
+              <Block key={item.id}>
+                <Text
+                  p
+                  lineHeight={26}
+                  color={colors.subTitle}
+                  size={16}
+                  paddingVertical={10}>
+                  {item.context}
+                </Text>
+                <Image
+                  source={require('../assets/images/divider2x.png')}
+                  tintColor={colors.primary}
+                  width="100%"
+                  resizeMode="contain"
+                />
+              </Block>
+            ))}
           </Block>
         </Block>
       </Block>
