@@ -3,6 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import {Articles, Components, Home, Profile, Register} from '../screens';
 import {useTranslation} from '../hooks';
+import ArticleScreen from '../screens/ArticleScreen';
 
 const Stack = createStackNavigator();
 
@@ -20,9 +21,9 @@ export default () => {
       <Stack.Screen name="Phone" component={Components} />
 
       <Stack.Screen
-        name="Articles"
-        component={Articles}
-        options={{title: 'Artciles'}}
+        name="ArticleNavigator"
+        component={ArticleNavigator}
+        options={{headerShown: false}}
       />
 
       <Stack.Screen
@@ -39,3 +40,18 @@ export default () => {
     </Stack.Navigator>
   );
 };
+
+const ArticleNavigator = () => (
+  <Stack.Navigator initialRouteName="Articles">
+    <Stack.Screen
+      name="Articles"
+      component={Articles}
+      options={{title: 'Artciles'}}
+    />
+    <Stack.Screen
+      name="ArticleScreen"
+      component={ArticleScreen}
+      options={{headerShown: false}}
+    />
+  </Stack.Navigator>
+);

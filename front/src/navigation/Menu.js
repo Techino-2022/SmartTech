@@ -102,7 +102,7 @@ const DrawerContent = (props) => {
   const screens = [
     {name: 'Phone Area', to: 'PhoneArea', icon: assets.home},
     {name: 'Phone', to: 'Phone', icon: assets.components},
-    {name: t('screens.articles'), to: 'Articles', icon: assets.document},
+    {name: 'Articles', to: 'ArticleNavigator', icon: assets.document},
     {name: t('screens.profile'), to: 'Profile', icon: assets.profile},
     {name: t('screens.register'), to: 'Register', icon: assets.register},
   ];

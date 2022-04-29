@@ -6,8 +6,8 @@ import {useData, useTheme, useTranslation} from '../hooks';
 import * as regex from '../constants/regex';
 import {Block, Button, Input, Image, Text, Checkbox} from '../components';
 
-import colors from '../config/colors'
-import { color } from 'react-native-reanimated';
+import colors from '../config/colors';
+import {color} from 'react-native-reanimated';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -63,7 +63,7 @@ const Register = () => {
             padding={sizes.sm}
             radius={sizes.cardRadius}
             source={assets.background}
-            height={sizes.height * 0.3}>
+            height={sizes.height * 0.2}>
             <Button
               row
               flex={0}
@@ -107,16 +107,13 @@ const Register = () => {
               justify="space-evenly"
               tint={colors.blurTint}
               paddingVertical={sizes.sm}>
-             
               <Block
                 row
                 flex={0}
                 align="center"
                 justify="center"
                 marginBottom={sizes.sm}
-                paddingHorizontal={sizes.xxl}>
-                
-              </Block>
+                paddingHorizontal={sizes.xxl}></Block>
               {/* form inputs */}
               <Block paddingHorizontal={sizes.sm}>
                 <Input
@@ -158,14 +155,11 @@ const Register = () => {
                   marginRight={sizes.sm}
                   color={colors.darkwhite}
                   checked={registration?.agreed}
-                  onPress={(value) => handleChange({agreed: value}) 
-                  }
+                  onPress={(value) => handleChange({agreed: value})}
                 />
                 <Text paddingRight={sizes.s} color={colors.darkwhite}>
                   {t('common.agree')}
-                  <Text color={colors.darkwhite}
-                    semibold
-                    >
+                  <Text color={colors.darkwhite} semibold>
                     Terms and Conditions
                   </Text>
                 </Text>

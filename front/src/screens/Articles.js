@@ -9,7 +9,7 @@ import {categories} from '../constants/categories';
 import ActivityIndicator from '../components/ActivityIndicator';
 import ThemeContext from '../config/context';
 
-const Articles = () => {
+const Articles = ({navigation}) => {
   const data = useData();
   const dispatch = useDispatch();
   const [selected, setSelected] = useState();
@@ -95,7 +95,12 @@ const Articles = () => {
         keyExtractor={(item) => `${item?.id}`}
         style={{paddingHorizontal: sizes.padding}}
         contentContainerStyle={{paddingBottom: sizes.l}}
-        renderItem={({item}) => <Article data={item} />}
+        renderItem={({item}) => (
+          <Article
+            data={item}
+            onPress={() => navigation.navigate('ArticleScreen', item)}
+          />
+        )}
         refreshing={loading}
         onRefresh={() => dispatch(loadPosts())}
       />
