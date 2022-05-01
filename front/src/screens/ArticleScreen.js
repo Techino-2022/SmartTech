@@ -1,27 +1,20 @@
-import React, {useCallback, useContext} from 'react';
-import {Platform, Linking} from 'react-native';
+import React, {useContext, useState} from 'react';
+import {Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {FontAwesome5, MaterialIcons, FontAwesome} from '@expo/vector-icons';
+import YoutubePlayer from 'react-native-youtube-iframe';
 
 import {Block, Button, Image, Text} from '../components';
-import {useData, useTheme, useTranslation} from '../hooks';
+import {useTheme} from '../hooks';
 
 import ThemeContext from '../config/context';
-
+import FloatButton from '../components/FloatButton';
 const isAndroid = Platform.OS === 'android';
 
 const ArticleScreen = ({route}) => {
-  const {user} = useData();
-  const {t} = useTranslation();
   const navigation = useNavigation();
   const {assets, sizes, gradients} = useTheme();
-
-  const IMAGE_SIZE = (sizes.width - (sizes.padding + sizes.sm) * 2) / 3;
-  const IMAGE_VERTICAL_SIZE =
-    (sizes.width - (sizes.padding + sizes.sm) * 2) / 2;
-  const IMAGE_MARGIN = (sizes.width - IMAGE_SIZE * 3 - sizes.padding * 2) / 2;
-  const IMAGE_VERTICAL_MARGIN =
-    (sizes.width - (IMAGE_VERTICAL_SIZE + sizes.sm) * 2) / 2;
+  const [like, setLike] = useState('heart-o');
 
   const data = route.params;
   const context = useContext(ThemeContext);
@@ -34,7 +27,7 @@ const ArticleScreen = ({route}) => {
       <Block
         scroll
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: sizes.padding}}>
+        contentContainerStyle={{paddingBottom: 100}}>
         <Block flex={0}>
           <Image
             background
@@ -62,7 +55,7 @@ const ArticleScreen = ({route}) => {
             </Button>
           </Image>
 
-          {/* profile: stats */}
+          {/* article: stats */}
           <Block
             flex={0}
             radius={sizes.sm}
@@ -127,9 +120,9 @@ const ArticleScreen = ({route}) => {
             </Block>
           </Block>
 
-          {/* profile: about me */}
+          {/* article: description */}
           <Block paddingHorizontal={sizes.sm}>
-            {data.descriptions.map((item) => (
+            {data.descriptions.map((item, index, array) => (
               <Block key={item.id}>
                 <Text
                   p
@@ -139,16 +132,44 @@ const ArticleScreen = ({route}) => {
                   paddingVertical={10}>
                   {item.context}
                 </Text>
-                <Image
-                  source={require('../assets/images/divider2x.png')}
-                  tintColor={colors.primary}
-                  width="100%"
-                  resizeMode="contain"
-                />
+                {index !== array.length - 1 && (
+                  <Image
+                    source={require('../assets/images/divider2x.png')}
+                    tintColor={colors.primary}
+                    width="100%"
+                    resizeMode="contain"
+                  />
+                )}
               </Block>
             ))}
           </Block>
+          {/* youtube */}
         </Block>
+      </Block>
+      <Block
+        row
+        backgroundColor={colors.item}
+        justif="space-between"
+        align="center"
+        radius={30}
+        padding={5}
+        position="absolute"
+        bottom={30}
+        left="34%">
+        <FloatButton
+          gradient={gradients[gradient.gr1]}
+          color="white"
+          name="comment"
+          marginRight={20}
+        />
+        <FloatButton
+          gradient={gradients[gradient.gr1]}
+          color="white"
+          name={like}
+          onPress={() =>
+            like === 'heart' ? setLike('heart-o') : setLike('heart')
+          }
+        />
       </Block>
     </Block>
   );
