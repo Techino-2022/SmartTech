@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {Platform, Linking} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import {useNavigation} from '@react-navigation/core';
@@ -6,7 +6,9 @@ import {useNavigation} from '@react-navigation/core';
 import {Block, Button, Image, Text} from '../components';
 import {useData, useTheme, useTranslation} from '../hooks';
 
-import colors from '../config/colors'
+import colors from '../config/colors';
+import {useDispatch, useSelector} from 'react-redux';
+import {getUserData} from '../store/user';
 
 const isAndroid = Platform.OS === 'android';
 
@@ -15,6 +17,12 @@ const Profile = () => {
   const {t} = useTranslation();
   const navigation = useNavigation();
   const {assets, sizes} = useTheme();
+  const dispatch = useDispatch();
+  const {userInfo} = useSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    console.log(userInfo);
+  }, [userInfo]);
 
   const IMAGE_SIZE = (sizes.width - (sizes.padding + sizes.sm) * 2) / 3;
   const IMAGE_VERTICAL_SIZE =
@@ -23,23 +31,21 @@ const Profile = () => {
   const IMAGE_VERTICAL_MARGIN =
     (sizes.width - (IMAGE_VERTICAL_SIZE + sizes.sm) * 2) / 2;
 
-
   return (
     <Block safe marginTop={sizes.md}>
-      <Block 
+      <Block
         scroll
         paddingHorizontal={sizes.s}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{paddingBottom: sizes.padding}}>
-        <Block flex={0} >
+        <Block flex={0}>
           <Image
             background
             resizeMode="cover"
             padding={sizes.sm}
             paddingBottom={sizes.l}
             radius={sizes.cardRadius}
-            source={assets.background}
-            >
+            source={assets.background}>
             <Button
               row
               flex={0}
@@ -65,7 +71,7 @@ const Profile = () => {
                 source={{uri: user?.avatar}}
               />
               <Text h5 center color={colors.darkgrey} marginBottom={20}>
-                {user?.name}
+                {userInfo.username}
               </Text>
             </Block>
           </Image>
@@ -106,8 +112,13 @@ const Profile = () => {
 
           {/* profile: about me */}
           <Block paddingHorizontal={sizes.sm}>
-            <Text h5 semibold marginBottom={sizes.s} marginTop={sizes.sm} color={colors.gold}>
-            About Me
+            <Text
+              h5
+              semibold
+              marginBottom={sizes.s}
+              marginTop={sizes.sm}
+              color={colors.gold}>
+              About Me
             </Text>
             <Text p lineHeight={26} color={colors.darkwhite}>
               {user?.about}

@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {Articles, Components, Home, Profile, Register} from '../screens';
 import {useTranslation} from '../hooks';
 import ArticleScreen from '../screens/ArticleScreen';
+import Login from '../screens/Login';
 
 const Stack = createStackNavigator();
 
@@ -35,6 +36,11 @@ export default () => {
       <Stack.Screen
         name="Register"
         component={Register}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Login"
+        component={Login}
         options={{headerShown: false}}
       />
     </Stack.Navigator>

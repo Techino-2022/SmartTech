@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {Platform} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {StackActions} from '@react-navigation/native';
@@ -6,8 +6,7 @@ import {Formik} from 'formik';
 import * as Yup from 'yup';
 
 import {useTheme, useTranslation} from '../hooks';
-import * as regex from '../constants/regex';
-import {Block, Button, Input, Image, Text, Checkbox} from '../components';
+import {Block, Button, Input, Image, Text} from '../components';
 
 import {getUserData, login} from '../store/user';
 import {useDispatch} from 'react-redux';
@@ -16,58 +15,32 @@ import ThemeContext from '../config/context';
 
 const isAndroid = Platform.OS === 'android';
 
-const Register = () => {
+const Login = () => {
   const context = useContext(ThemeContext);
   const {colors, gradient} = context.theme;
   const [loading, setLoading] = useState(false);
   const {t} = useTranslation();
   const navigation = useNavigation();
   const dispatch = useDispatch();
-  const [isValid, setIsValid] = useState({
-    name: false,
-    email: false,
-    password: false,
-    agreed: false,
-  });
-  const [registration, setRegistration] = useState({
-    name: '',
-    email: '',
-    password: '',
-    agreed: false,
-  });
+
   const {assets, gradients, sizes} = useTheme();
 
   const validationSchema = Yup.object().shape({
     username: Yup.string().required().min(4).label('Username'),
     password: Yup.string().required().min(8).label('Password'),
-    confirm: Yup.string()
-      .required()
-      .oneOf([Yup.ref('password')], 'Your passwords do not match.'),
   });
 
-  useEffect(() => {
-    setIsValid((state) => ({
-      ...state,
-      name: regex.name.test(registration.name),
-      email: regex.email.test(registration.email),
-      password: regex.password.test(registration.password),
-      agreed: registration.agreed,
-    }));
-  }, [registration, setIsValid]);
-
   const handleSubmit = async ({username, password}) => {
-    if (!Object.values(isValid).includes(false)) {
-      setLoading(true);
-      await dispatch(
-        login({
-          username: username,
-          password: password,
-        }),
-      );
-      await dispatch(getUserData());
-      setLoading(false);
-      navigation.dispatch(StackActions.replace('Login'));
-    }
+    setLoading(true);
+    await dispatch(
+      login({
+        username: username,
+        password: password,
+      }),
+    );
+    await dispatch(getUserData());
+    setLoading(false);
+    navigation.dispatch(StackActions.replace('Profile'));
   };
 
   return (
@@ -105,13 +78,13 @@ const Register = () => {
             </Button>
 
             <Text h3 center color={colors.card}>
-              Register
+              Login
             </Text>
           </Image>
         </Block>
         {/* login form */}
         <Formik
-          initialValues={{confirm: '', username: '', password: ''}}
+          initialValues={{username: '', password: ''}}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}>
           {({handleChange, handleSubmit, errors, values}) => (
@@ -172,46 +145,14 @@ const Register = () => {
                       {errors.password && (
                         <Text color="red">{errors.password}</Text>
                       )}
-                      <Input
-                        marginBottom={sizes.m}
-                        color={colors.subTitle}
-                        label="Confirm"
-                        placeholder="Enter password again"
-                        success={Boolean(values.confirm && !errors.confirm)}
-                        danger={Boolean(values.confirm && errors.confirm)}
-                        onChangeText={handleChange('confirm')}
-                      />
-                      {errors.confirm && (
-                        <Text color="red">{errors.confirm}</Text>
-                      )}
-                    </Block>
-                    {/* checkbox terms */}
-                    <Block
-                      row
-                      flex={0}
-                      align="center"
-                      paddingHorizontal={sizes.sm}>
-                      <Checkbox
-                        marginRight={sizes.sm}
-                        color={colors.subTitle}
-                        checked={registration?.agreed}
-                        onPress={(value) => setIsValid({agreed: value})}
-                      />
-                      <Text paddingRight={sizes.s} color={colors.subTitle}>
-                        {t('common.agree')}
-                        <Text color={colors.subTitle} semibold>
-                          Terms and Conditions
-                        </Text>
-                      </Text>
                     </Block>
                     <Button
                       onPress={handleSubmit}
                       marginVertical={sizes.s}
                       marginHorizontal={sizes.sm}
-                      gradient={gradients[gradient.gr1]}
-                      disabled={Object.values(isValid).includes(false)}>
+                      gradient={gradients[gradient.gr1]}>
                       <Text bold white transform="uppercase">
-                        {t('common.signup')}
+                        SIGN IN
                       </Text>
                     </Button>
                     <Button
@@ -220,9 +161,9 @@ const Register = () => {
                       shadow={!isAndroid}
                       marginVertical={sizes.s}
                       marginHorizontal={sizes.sm}
-                      onPress={() => navigation.navigate('Pro')}>
+                      onPress={() => navigation.navigate('Register')}>
                       <Text bold color={colors.primary} transform="uppercase">
-                        {t('common.signin')}
+                        SIGN UP
                       </Text>
                     </Button>
                   </Block>
@@ -236,4 +177,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Login;

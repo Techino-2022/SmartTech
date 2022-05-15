@@ -7,6 +7,7 @@ import {useHeaderHeight} from '@react-navigation/stack';
 import {useTheme} from '../hooks';
 import useApi from '../hooks/useApi';
 import {Block, Button, Input, Switch, Modal, Text} from '../components';
+import YoutubePlayer from 'react-native-youtube-iframe';
 
 import colors from '../config/colors';
 
@@ -20,7 +21,18 @@ const Phone = () => {
     <Block
       paddingHorizontal={sizes.padding}
       marginRight={30}
+      width="100%"
       style={{flexDirection: 'column'}}>
+      <Block width="100%">
+        <YoutubePlayer
+          height={300}
+          width="100%"
+          webViewStyle={{opacity: 0.99}}
+          initialPlayerParams={{controls: false}}
+          videoId={`GaF3pH1bPg4`}
+          play
+        />
+      </Block>
       <Text
         h4
         bold

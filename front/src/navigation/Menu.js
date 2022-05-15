@@ -104,7 +104,7 @@ const DrawerContent = (props) => {
     {name: 'Phone', to: 'Phone', icon: assets.components},
     {name: 'Articles', to: 'ArticleNavigator', icon: assets.document},
     {name: t('screens.profile'), to: 'Profile', icon: assets.profile},
-    {name: t('screens.register'), to: 'Register', icon: assets.register},
+    {name: t('screens.register'), to: 'Login', icon: assets.register},
   ];
 
   return (
