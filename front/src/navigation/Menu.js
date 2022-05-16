@@ -101,7 +101,6 @@ const DrawerContent = (props) => {
   // screen list for Drawer menu
   const screens = [
     {name: 'Phone Area', to: 'PhoneArea', icon: assets.home},
-    {name: 'Phone', to: 'Phone', icon: assets.components},
     {name: 'Articles', to: 'ArticleNavigator', icon: assets.document},
     {name: t('screens.profile'), to: 'Profile', icon: assets.profile},
     {name: t('screens.register'), to: 'Login', icon: assets.register},

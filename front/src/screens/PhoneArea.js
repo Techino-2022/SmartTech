@@ -13,7 +13,7 @@ import ThemeContext from '../config/context';
 import FilterButton from '../components/FilterButton';
 import {RefreshControl} from 'react-native';
 
-const Home = () => {
+const Home = ({navigation}) => {
   const {t} = useTranslation();
   const [tab, setTab] = useState('vertical');
   const [selected, setSelected] = useState('all');
@@ -184,7 +184,12 @@ const Home = () => {
         <Block row wrap="wrap" justify="space-between" marginTop={sizes.sm}>
           {!loading &&
             phones.map((product) => (
-              <Product type={tab} data={product} key={`card-${product?.id}`} />
+              <Product
+                type={tab}
+                data={product}
+                key={`card-${product?.id}`}
+                navigation={navigation}
+              />
             ))}
         </Block>
       </Block>

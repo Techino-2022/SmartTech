@@ -8,7 +8,7 @@ import {useTheme, useTranslation} from '../hooks';
 
 import ThemeContext from '../config/context';
 
-const Product = ({type, data}) => {
+const Product = ({type, data, navigation}) => {
   const {t} = useTranslation();
   const {assets, sizes} = useTheme();
   const context = useContext(ThemeContext);
@@ -74,7 +74,7 @@ const Product = ({type, data}) => {
           </Text>
         </Block>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Phone', data)}>
           <Block row flex={0} align="center" marginTop={5}>
             <Text
               p
