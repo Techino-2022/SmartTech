@@ -55,7 +55,7 @@ const Login = () => {
             radius={sizes.cardRadius}
             source={
               context.theme.name === 'dark'
-                ? require('../assets/images/background.png')
+                ? require('../assets/images/background.jpg')
                 : require('../assets/images/background1.png')
             }
             height={sizes.height * 0.2}>

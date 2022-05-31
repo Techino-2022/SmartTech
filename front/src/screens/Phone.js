@@ -1,198 +1,168 @@
-import React, {useContext, useEffect, useLayoutEffect, useState} from 'react';
-import {FlatList, TouchableOpacity, Image} from 'react-native';
+import React, {useContext, useLayoutEffect, useState} from 'react';
+import {Image} from 'react-native';
 
 import {useNavigation} from '@react-navigation/core';
 import {useHeaderHeight} from '@react-navigation/stack';
 import YoutubePlayer from 'react-native-youtube-iframe';
 
 import {useTheme} from '../hooks';
-import useApi from '../hooks/useApi';
-import {Block, Button, Input, Switch, Modal, Text} from '../components';
+import {Block, Text} from '../components';
 
-import {
-  Table,
-  TableWrapper,
-  Col,
-  Cols,
-  Row,
-  Cell,
-} from 'react-native-table-component';
-import {Rows} from 'react-native-table-component';
+import {Table, Row, Rows} from 'react-native-table-component';
 import ThemeContext from '../config/context';
 import FloatButton from '../components/FloatButton';
 
-const mainArray = {
-  prosAndConsTitle: ['Pros', 'Cons'],
-  prosAndCons: [
-    ['good quality of speakers', 'price'],
-    ['fast memory', 'no 3.5mm jack'],
-    ['good screen', ''],
-    ['dust/water', ''],
-    ['resistant', ''],
-    ['Samsung Wireless DeX', ''],
-    ['ANT+', ''],
-    ['Bixby natural language commands and dictation', ''],
-    ['Samsung Pay', ''],
-  ],
-  Release: ['5 August 2020'],
-};
-
-const bodyArray = {
-  bodyTitle: ['Body'],
-  bodyDetails: [
-    ['weight', '192 grams'],
-    ['Build', 'Glass front (Gorilla Glass 5), plastic back'],
-    ['SIM', '(1,Nano and eSIM) OR (2,Hybrid,Nano,dual-standby)'],
-    [
-      'Protection',
-      'IP68 dust/water resistant (up to 1.5m for 30 mins Corning Gorilla Glass 5',
-    ],
-  ],
-};
-
-const displayArray = {
-  displayTitle: ['Display'],
-  displayDetails: [
-    ['Size', '6.7" Super AMOLED Plus, HDR10+'],
-    ['Resolution', '1080 × 2400'],
-    ['Always-on display', 'True'],
-  ],
-};
-
-const platformArray = {
-  platformTitle: ['Platform'],
-  platformDetails: [
-    ['OS', 'Android 10, can up to 11, One UI 3.0'],
-    [
-      'Chipset',
-      'Exynos 990 (7 nm+) - Global\nQualcomm SM8250 Snapdragon 865 5G+ (7 nm+) - USA',
-    ],
-    ['GPU', 'Mali-G77 MP11 - Global\nAdreno 650 - USA'],
-  ],
-};
-
-const memoryArray = {
-  memoryTitle: ['Memory'],
-  memoryDetails: [
-    ['Internal', '256GB Internal and 8GB RAM'],
-    ['Type of Storage', 'UFS 3.0'],
-  ],
-};
-
-const mainCameraArray = {
-  mainCameraTitle: ['Main Camera'],
-  mainCameraDetails: [
-    [
-      'Triple',
-      '12 MP, f/1.8, 26mm (wide), 1/1.76", 1.8µm, Dual Pixel PDAF, OIS\n64 MP, f/2.0, 27mm (telephoto), 1/1.72", 0.8µm, PDAF, OIS, 3x hybrid zoom\n12 MP, f/2.2, 120˚, 13mm (ultrawide), 1/2.55", 1.4µm',
-    ],
-    ['Features', 'LED flash, auto-HDR, panorama'],
-    [
-      'Video',
-      '8K@24fps, 4K@30/60fps, 1080p@30/60/240fps, 720p@960fps, HDR10+, stereo sound rec., gyro-EIS & OIS',
-    ],
-  ],
-};
-
-const selfieCameraArray = {
-  selfieCameraTitle: ['Selfie Camera'],
-  selfieCameraDetails: [
-    ['Single', '10 MP, f/2.2, 26mm (wide), 1/3.2", 1.22µm, Dual Pixel PDAF'],
-    ['Features', 'Dual video call, Auto-HDR'],
-    ['Video', '4K@30/60fps, 1080p@30fps'],
-  ],
-};
-
-const soundArray = {
-  soundTitle: ['Sound'],
-  soundDetails: [
-    ['Loudspeaker', 'stereo speakers'],
-    ['3.5mm jack', 'No'],
-    ['Quality', '32-bit/384kHz audio\nTuned by AKG'],
-  ],
-};
-
-const networkArray = {
-  networkTitle: ['Network'],
-  networkDetails: [
-    ['WLAN', 'Wi-Fi 802.11 a/b/g/n/ac/6, dual-band, Wi-Fi Direct, hotspot'],
-    ['Bluetooth', 'Yes, with A-GPS, GLONASS, BDS, GALILEO'],
-    ['GPS', 'Yes, with A-GPS, GLONASS, BDS, GALILEO'],
-    ['NFC', 'Yes'],
-    ['Radio', 'FM radio (Snapdragon model only; market/operator dependent)'],
-  ],
-};
-
-const usbArray = {
-  usbTitle: ['USB'],
-  usbDetails: [
-    ['Type', 'USB Type-C 3.2'],
-    ['On The Go (OTG)', 'Yes'],
-  ],
-};
-
-const featuresArray = {
-  featuresTitle: ['Features'],
-  featuresDetails: [
-    ['Face ID', 'No'],
-    ['Fingertprint', 'Yes, under display, ultrasonic'],
-    ['Accelerometer', 'Yes'],
-    ['Gyroscope', 'Yes'],
-    ['Proximity', 'Yes'],
-    ['Compass', 'Yes'],
-    ['Barometer', 'Yes'],
-    ['H2O', 'No'],
-    ['Beat rate', 'No'],
-    ['Temperature', 'No'],
-    ['Laser', 'No'],
-  ],
-  otherFeatures: [
-    'Other Features',
-    'Samsung Wireless DeX (desktop experience support)\nANT+\nBixby natural language commands and dictation\nSamsung Pay (Visa, MasterCard certified)',
-  ],
-};
-
-const batteryArray = {
-  batteryTitle: ['Battery'],
-  batteryDetails: [
-    ['Capacity', '4300 mAh'],
-    ['Type', 'Li-Ion'],
-    ['Removable', 'No'],
-  ],
-  batteryFeatures: [
-    'Battery Features',
-    'Fast charging 25W\nUSB Power Delivery 3.0\nFast Qi/PMA wireless charging 15W\nReverse wireless charging 4.5W',
-  ],
-};
-
-const miscArray = {
-  miscTitle: ['Misc'],
-  miscDetails: [
-    [
-      'Colors',
-      'Mystic Green, Mystic Bronze, Mystic Gray, Mystic Red, Mystic Blue',
-    ],
-    ['Approximate price', '$700'],
-    ['Models', 'SM-N980F, SM-N980F/DS'],
-  ],
-};
-
-// buttons example
 const Phone = ({data}) => {
-  const {assets, gradients, sizes} = useTheme();
-  const [mainData, mainSetData] = useState(mainArray);
-  const [bodyData, bodySetData] = useState(bodyArray);
-  const [displayData, displaySetData] = useState(displayArray);
-  const [platformData, platformSetData] = useState(platformArray);
-  const [memoryData, memorySetData] = useState(memoryArray);
-  const [mainCameraData, mainCameraSetData] = useState(mainCameraArray);
-  const [selfieCameraData, selfieCameraSetData] = useState(selfieCameraArray);
-  const [soundData, soundSetData] = useState(soundArray);
-  const [networkData, networkSetData] = useState(networkArray);
-  const [usbData, usbSetData] = useState(usbArray);
-  const [featuresData, featuresSetData] = useState(featuresArray);
-  const [batteryData, batterySetData] = useState(batteryArray);
-  const [miscData, miscSetData] = useState(miscArray);
+  const mainData = {
+    prosAndConsTitle: ['Pros', 'Cons'],
+    prosAndCons: [[data.pros, data.cons]],
+    Release: ['6 August 2020'],
+  };
+
+  const bodyData = {
+    bodyTitle: ['Body'],
+    bodyDetails: [
+      ['weight', `${data.body.weight} grams`],
+      [
+        'Build',
+        `front ${data.body.material[0].front_glass}, back ${data.body.material[0].back_glass}`,
+      ],
+      ['SIM', data.network.sim_slot],
+      ['Protection', `${data.body.ip_certificate}, ${data.body.protection}`],
+    ],
+  };
+
+  const displayData = {
+    displayTitle: ['Display'],
+    displayDetails: [
+      ['Size', `${data.body.size}" ${data.body.display_features}`],
+      ['Resolution', data.body.resolution],
+      [
+        'Always-on display',
+        `${data.body.always_on_display ? 'True' : 'False'}`,
+      ],
+    ],
+  };
+
+  const platformData = {
+    platformTitle: ['Platform'],
+    platformDetails: [
+      ['OS', 'Android 10, can up to 11, One UI 3.0'],
+      [
+        'Chipset',
+        'Exynos 990 (7 nm+) - Global\nQualcomm SM8250 Snapdragon 865 5G+ (7 nm+) - USA',
+      ],
+      ['GPU', 'Mali-G77 MP11 - Global\nAdreno 650 - USA'],
+    ],
+  };
+
+  const memoryData = {
+    memoryTitle: ['Memory'],
+    memoryDetails: [
+      ['Internal', '256GB Internal and 8GB RAM'],
+      ['Type of Storage', 'UFS 3.0'],
+    ],
+  };
+
+  const mainCameraData = {
+    mainCameraTitle: ['Main Camera'],
+    mainCameraDetails: [
+      [
+        'Triple',
+        '12 MP, f/1.8, 26mm (wide), 1/1.76", 1.8µm, Dual Pixel PDAF, OIS\n64 MP, f/2.0, 27mm (telephoto), 1/1.72", 0.8µm, PDAF, OIS, 3x hybrid zoom\n12 MP, f/2.2, 120˚, 13mm (ultrawide), 1/2.55", 1.4µm',
+      ],
+      ['Features', 'LED flash, auto-HDR, panorama'],
+      [
+        'Video',
+        '8K@24fps, 4K@30/60fps, 1080p@30/60/240fps, 720p@960fps, HDR10+, stereo sound rec., gyro-EIS & OIS',
+      ],
+    ],
+  };
+
+  const selfieCameraData = {
+    selfieCameraTitle: ['Selfie Camera'],
+    selfieCameraDetails: [
+      ['Single', '10 MP, f/2.2, 26mm (wide), 1/3.2", 1.22µm, Dual Pixel PDAF'],
+      ['Features', 'Dual video call, Auto-HDR'],
+      ['Video', '4K@30/60fps, 1080p@30fps'],
+    ],
+  };
+
+  const soundData = {
+    soundTitle: ['Sound'],
+    soundDetails: [
+      ['Loudspeaker', 'stereo speakers'],
+      ['3.5mm jack', 'No'],
+      ['Quality', '32-bit/384kHz audio\nTuned by AKG'],
+    ],
+  };
+
+  const networkData = {
+    networkTitle: ['Network'],
+    networkDetails: [
+      ['WLAN', 'Wi-Fi 802.11 a/b/g/n/ac/6, dual-band, Wi-Fi Direct, hotspot'],
+      ['Bluetooth', 'Yes, with A-GPS, GLONASS, BDS, GALILEO'],
+      ['GPS', 'Yes, with A-GPS, GLONASS, BDS, GALILEO'],
+      ['NFC', 'Yes'],
+      ['Radio', 'FM radio (Snapdragon model only; market/operator dependent)'],
+    ],
+  };
+
+  const usbData = {
+    usbTitle: ['USB'],
+    usbDetails: [
+      ['Type', 'USB Type-C 3.2'],
+      ['On The Go (OTG)', 'Yes'],
+    ],
+  };
+
+  const featuresData = {
+    featuresTitle: ['Features'],
+    featuresDetails: [
+      ['Face ID', 'No'],
+      ['Fingertprint', 'Yes, under display, ultrasonic'],
+      ['Accelerometer', 'Yes'],
+      ['Gyroscope', 'Yes'],
+      ['Proximity', 'Yes'],
+      ['Compass', 'Yes'],
+      ['Barometer', 'Yes'],
+      ['H2O', 'No'],
+      ['Beat rate', 'No'],
+      ['Temperature', 'No'],
+      ['Laser', 'No'],
+    ],
+    otherFeatures: [
+      'Other Features',
+      'Samsung Wireless DeX (desktop experience support)\nANT+\nBixby natural language commands and dictation\nSamsung Pay (Visa, MasterCard certified)',
+    ],
+  };
+
+  const batteryData = {
+    batteryTitle: ['Battery'],
+    batteryDetails: [
+      ['Capacity', '4300 mAh'],
+      ['Type', 'Li-Ion'],
+      ['Removable', 'No'],
+    ],
+    batteryFeatures: [
+      'Battery Features',
+      'Fast charging 25W\nUSB Power Delivery 3.0\nFast Qi/PMA wireless charging 15W\nReverse wireless charging 4.5W',
+    ],
+  };
+
+  const miscData = {
+    miscTitle: ['Misc'],
+    miscDetails: [
+      [
+        'Colors',
+        'Mystic Green, Mystic Bronze, Mystic Gray, Mystic Red, Mystic Blue',
+      ],
+      ['Approximate price', '$700'],
+      ['Models', 'SM-N980F, SM-N980F/DS'],
+    ],
+  };
+
+  const {gradients, sizes} = useTheme();
   const [showVideo, setShowVideo] = useState(false);
   const context = useContext(ThemeContext);
   const {colors, gradient} = context.theme;
@@ -290,7 +260,7 @@ const Phone = ({data}) => {
         <Rows
           data={bodyData.bodyDetails}
           textStyle={{color: colors.subTitle, fontSize: 14, padding: 6}}
-          flexArr={[1, 4]}
+          flexArr={[2, 6]}
         />
       </Table>
 
@@ -310,7 +280,7 @@ const Phone = ({data}) => {
         <Rows
           data={displayData.displayDetails}
           textStyle={{color: colors.subTitle, fontSize: 14, padding: 6}}
-          flexArr={[1, 4]}
+          flexArr={[2, 6]}
         />
       </Table>
 
@@ -330,7 +300,7 @@ const Phone = ({data}) => {
         <Rows
           data={platformData.platformDetails}
           textStyle={{color: colors.subTitle, fontSize: 14, padding: 6}}
-          flexArr={[1, 4]}
+          flexArr={[2, 6]}
         />
       </Table>
 
@@ -350,7 +320,7 @@ const Phone = ({data}) => {
         <Rows
           data={memoryData.memoryDetails}
           textStyle={{color: colors.subTitle, fontSize: 14, padding: 6}}
-          flexArr={[1, 4]}
+          flexArr={[2, 6]}
         />
       </Table>
 
@@ -370,7 +340,7 @@ const Phone = ({data}) => {
         <Rows
           data={mainCameraData.mainCameraDetails}
           textStyle={{color: colors.subTitle, fontSize: 14, padding: 6}}
-          flexArr={[1, 4]}
+          flexArr={[2, 6]}
         />
       </Table>
 
@@ -390,7 +360,7 @@ const Phone = ({data}) => {
         <Rows
           data={selfieCameraData.selfieCameraDetails}
           textStyle={{color: colors.subTitle, fontSize: 14, padding: 6}}
-          flexArr={[1, 4]}
+          flexArr={[2, 6]}
         />
       </Table>
 
@@ -410,7 +380,7 @@ const Phone = ({data}) => {
         <Rows
           data={soundData.soundDetails}
           textStyle={{color: colors.subTitle, fontSize: 13, padding: 6}}
-          flexArr={[1, 4]}
+          flexArr={[2, 6]}
         />
       </Table>
 
@@ -430,7 +400,7 @@ const Phone = ({data}) => {
         <Rows
           data={networkData.networkDetails}
           textStyle={{color: colors.subTitle, fontSize: 13, padding: 6}}
-          flexArr={[1, 4]}
+          flexArr={[2, 6]}
         />
       </Table>
 
@@ -450,7 +420,7 @@ const Phone = ({data}) => {
         <Rows
           data={usbData.usbDetails}
           textStyle={{color: colors.subTitle, fontSize: 13, padding: 6}}
-          flexArr={[1, 4]}
+          flexArr={[2, 6]}
         />
       </Table>
 
@@ -470,7 +440,7 @@ const Phone = ({data}) => {
         <Rows
           data={featuresData.featuresDetails}
           textStyle={{color: colors.subTitle, fontSize: 13, padding: 6}}
-          flexArr={[1, 4]}
+          flexArr={[2, 6]}
         />
         <Row
           data={featuresData.otherFeatures}
@@ -479,7 +449,7 @@ const Phone = ({data}) => {
             padding: 8,
             fontSize: 15,
           }}
-          flexArr={[1, 4]}
+          flexArr={[2, 6]}
         />
       </Table>
 
@@ -499,7 +469,7 @@ const Phone = ({data}) => {
         <Rows
           data={batteryData.batteryDetails}
           textStyle={{color: colors.subTitle, fontSize: 13, padding: 6}}
-          flexArr={[1, 4]}
+          flexArr={[2, 6]}
         />
         <Row
           data={batteryData.batteryFeatures}
@@ -508,7 +478,7 @@ const Phone = ({data}) => {
             padding: 8,
             fontSize: 15,
           }}
-          flexArr={[1, 4]}
+          flexArr={[2, 6]}
         />
       </Table>
 
@@ -528,7 +498,7 @@ const Phone = ({data}) => {
         <Rows
           data={miscData.miscDetails}
           textStyle={{color: colors.subTitle, fontSize: 13, padding: 6}}
-          flexArr={[1, 4]}
+          flexArr={[2, 6]}
         />
       </Table>
     </Block>

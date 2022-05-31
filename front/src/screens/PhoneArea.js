@@ -68,7 +68,7 @@ const Home = ({navigation}) => {
           search
           placeholder={t('common.search')}
           color={colors.text}
-          onChange={handleSearch}
+          onChangeText={handleSearch}
         />
       </Block>
 
