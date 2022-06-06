@@ -24,6 +24,12 @@ const Phone = ({data}) => {
     return cameras;
   };
 
+  const MergeColors = () => {
+    let colors = '';
+    data.body.color.map((col) => (colors += `${col.name}, `));
+    return colors;
+  };
+
   const mainData = {
     prosAndConsTitle: ['Pros', 'Cons'],
     prosAndCons: [[data.pros, data.cons]],
@@ -100,64 +106,59 @@ const Phone = ({data}) => {
   const networkData = {
     networkTitle: ['Network'],
     networkDetails: [
-      ['Bluetooth', 'Yes, with A-GPS, GLONASS, BDS, GALILEO'],
-      ['GPS', 'Yes, with A-GPS, GLONASS, BDS, GALILEO'],
+      ['Bluetooth', 'Yes'],
+      ['GPS', 'Yes'],
       ['NFC', 'Yes'],
-      ['Radio', 'FM radio (Snapdragon model only; market/operator dependent)'],
+      ['Radio', 'Yes'],
     ],
   };
 
   const usbData = {
     usbTitle: ['USB'],
     usbDetails: [
-      ['Type', 'USB Type-C 3.2'],
-      ['On The Go (OTG)', 'Yes'],
+      ['Type', `USB ${data.usb[0].version}`],
+      ['On The Go (OTG)', `${data.usb[0].on_to_go ? 'Yes' : 'No'}`],
     ],
   };
 
   const featuresData = {
     featuresTitle: ['Features'],
     featuresDetails: [
-      ['Face ID', 'No'],
-      ['Fingertprint', 'Yes, under display, ultrasonic'],
-      ['Accelerometer', 'Yes'],
-      ['Gyroscope', 'Yes'],
-      ['Proximity', 'Yes'],
-      ['Compass', 'Yes'],
-      ['Barometer', 'Yes'],
-      ['H2O', 'No'],
-      ['Beat rate', 'No'],
-      ['Temperature', 'No'],
-      ['Laser', 'No'],
-    ],
-    otherFeatures: [
-      'Other Features',
-      'Samsung Wireless DeX (desktop experience support)\nANT+\nBixby natural language commands and dictation\nSamsung Pay (Visa, MasterCard certified)',
+      ['Face ID', `${data.sensor[0].face_id ? 'Yes' : 'No'}`],
+      [
+        'Fingertprint',
+        data.sensor[0].fingerprint
+          ? `Yes, ${data.sensor[0].fingerprint_type}`
+          : 'No',
+      ],
+      ['Accelerometer', `${data.sensor[0].accelerometer ? 'Yes' : 'No'}`],
+      ['Gyroscope', `${data.sensor[0].gyroscope ? 'Yes' : 'No'}`],
+      ['Proximity', `${data.sensor[0].proximity ? 'Yes' : 'No'}`],
+      ['Compass', `${data.sensor[0].compass ? 'Yes' : 'No'}`],
+      ['Barometer', `${data.sensor[0].barometer ? 'Yes' : 'No'}`],
+      ['H2O', `${data.sensor[0].h2o ? 'Yes' : 'No'}`],
+      ['Beat rate', `${data.sensor[0].beat_rate ? 'Yes' : 'No'}`],
+      ['Temperature', `${data.sensor[0].temperature ? 'Yes' : 'No'}`],
+      ['Laser', `${data.sensor[0].laser ? 'Yes' : 'No'}`],
     ],
   };
 
   const batteryData = {
     batteryTitle: ['Battery'],
     batteryDetails: [
-      ['Capacity', '4300 mAh'],
-      ['Type', 'Li-Ion'],
-      ['Removable', 'No'],
+      ['Capacity', `${data.battery[0].capacity} mAh`],
+      ['Type', `Li-${data.battery[0].type_select}`],
+      ['Removable', data.battery[0].removable ? 'Yes' : 'No'],
     ],
-    batteryFeatures: [
-      'Battery Features',
-      'Fast charging 25W\nUSB Power Delivery 3.0\nFast Qi/PMA wireless charging 15W\nReverse wireless charging 4.5W',
-    ],
+    batteryFeatures: ['Battery Features', data.battery[0].features],
   };
 
   const miscData = {
     miscTitle: ['Misc'],
     miscDetails: [
-      [
-        'Colors',
-        'Mystic Green, Mystic Bronze, Mystic Gray, Mystic Red, Mystic Blue',
-      ],
-      ['Approximate price', '$700'],
-      ['Models', 'SM-N980F, SM-N980F/DS'],
+      ['Colors', MergeColors()],
+      ['Approximate price', `$${data.price}`],
+      ['Model', data.model],
     ],
   };
 
@@ -358,7 +359,7 @@ const Phone = ({data}) => {
         />
         <Rows
           data={soundData.soundDetails}
-          textStyle={{color: colors.subTitle, fontSize: 13, padding: 6}}
+          textStyle={{color: colors.subTitle, fontSize: 14, padding: 6}}
           flexArr={[2, 6]}
         />
       </Table>
@@ -378,7 +379,7 @@ const Phone = ({data}) => {
         />
         <Rows
           data={networkData.networkDetails}
-          textStyle={{color: colors.subTitle, fontSize: 13, padding: 6}}
+          textStyle={{color: colors.subTitle, fontSize: 14, padding: 6}}
           flexArr={[2, 6]}
         />
       </Table>
@@ -398,7 +399,7 @@ const Phone = ({data}) => {
         />
         <Rows
           data={usbData.usbDetails}
-          textStyle={{color: colors.subTitle, fontSize: 13, padding: 6}}
+          textStyle={{color: colors.subTitle, fontSize: 14, padding: 6}}
           flexArr={[2, 6]}
         />
       </Table>
@@ -418,16 +419,7 @@ const Phone = ({data}) => {
         />
         <Rows
           data={featuresData.featuresDetails}
-          textStyle={{color: colors.subTitle, fontSize: 13, padding: 6}}
-          flexArr={[2, 6]}
-        />
-        <Row
-          data={featuresData.otherFeatures}
-          textStyle={{
-            color: colors.subTitle,
-            padding: 8,
-            fontSize: 15,
-          }}
+          textStyle={{color: colors.subTitle, fontSize: 14, padding: 6}}
           flexArr={[2, 6]}
         />
       </Table>
@@ -447,7 +439,7 @@ const Phone = ({data}) => {
         />
         <Rows
           data={batteryData.batteryDetails}
-          textStyle={{color: colors.subTitle, fontSize: 13, padding: 6}}
+          textStyle={{color: colors.subTitle, fontSize: 14, padding: 6}}
           flexArr={[2, 6]}
         />
         <Row
@@ -455,7 +447,7 @@ const Phone = ({data}) => {
           textStyle={{
             color: colors.subTitle,
             padding: 8,
-            fontSize: 15,
+            fontSize: 13,
           }}
           flexArr={[2, 6]}
         />
@@ -476,7 +468,7 @@ const Phone = ({data}) => {
         />
         <Rows
           data={miscData.miscDetails}
-          textStyle={{color: colors.subTitle, fontSize: 13, padding: 6}}
+          textStyle={{color: colors.subTitle, fontSize: 14, padding: 6}}
           flexArr={[2, 6]}
         />
       </Table>
