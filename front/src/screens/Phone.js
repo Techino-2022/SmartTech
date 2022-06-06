@@ -13,10 +13,21 @@ import ThemeContext from '../config/context';
 import FloatButton from '../components/FloatButton';
 
 const Phone = ({data}) => {
+  const d = new Date(data.date);
+
+  const cameraMerge = () => {
+    let cameras = '';
+    data.camera.map((cam, index, array) => {
+      cameras += `${cam.pixel_count} MP, f/${cam.diaphragm}, ${cam?.features}`;
+      if (array.length - 1 !== index) cameras += '\n';
+    });
+    return cameras;
+  };
+
   const mainData = {
     prosAndConsTitle: ['Pros', 'Cons'],
     prosAndCons: [[data.pros, data.cons]],
-    Release: ['6 August 2020'],
+    Release: [d.toDateString()],
   };
 
   const bodyData = {
@@ -28,7 +39,7 @@ const Phone = ({data}) => {
         `front ${data.body.material[0].front_glass}, back ${data.body.material[0].back_glass}`,
       ],
       ['SIM', data.network.sim_slot],
-      ['Protection', `${data.body.ip_certificate}, ${data.body.protection}`],
+      ['Protection', `${data.body?.ip_certificate}, ${data.body.protection}`],
     ],
   };
 
@@ -47,44 +58,33 @@ const Phone = ({data}) => {
   const platformData = {
     platformTitle: ['Platform'],
     platformDetails: [
-      ['OS', 'Android 10, can up to 11, One UI 3.0'],
       [
-        'Chipset',
-        'Exynos 990 (7 nm+) - Global\nQualcomm SM8250 Snapdragon 865 5G+ (7 nm+) - USA',
+        'OS',
+        `${data.operating_system[0].os} ${data.operating_system[0].version}, ${data.operating_system[0].interface}`,
       ],
-      ['GPU', 'Mali-G77 MP11 - Global\nAdreno 650 - USA'],
+      ['Chipset', data.platform[0].cpu_chipset],
+      ['GPU', data.platform[0].gpu_chipset],
     ],
   };
 
   const memoryData = {
     memoryTitle: ['Memory'],
     memoryDetails: [
-      ['Internal', '256GB Internal and 8GB RAM'],
-      ['Type of Storage', 'UFS 3.0'],
+      [
+        'Internal',
+        `${data.storage[0].size}GB Internal and ${data.ram.number}GB RAM`,
+      ],
+      ['Type of Storage', data.storage[0].technology],
     ],
   };
 
+  //TODO complete camera section
   const mainCameraData = {
     mainCameraTitle: ['Main Camera'],
     mainCameraDetails: [
-      [
-        'Triple',
-        '12 MP, f/1.8, 26mm (wide), 1/1.76", 1.8µm, Dual Pixel PDAF, OIS\n64 MP, f/2.0, 27mm (telephoto), 1/1.72", 0.8µm, PDAF, OIS, 3x hybrid zoom\n12 MP, f/2.2, 120˚, 13mm (ultrawide), 1/2.55", 1.4µm',
-      ],
-      ['Features', 'LED flash, auto-HDR, panorama'],
-      [
-        'Video',
-        '8K@24fps, 4K@30/60fps, 1080p@30/60/240fps, 720p@960fps, HDR10+, stereo sound rec., gyro-EIS & OIS',
-      ],
-    ],
-  };
-
-  const selfieCameraData = {
-    selfieCameraTitle: ['Selfie Camera'],
-    selfieCameraDetails: [
-      ['Single', '10 MP, f/2.2, 26mm (wide), 1/3.2", 1.22µm, Dual Pixel PDAF'],
-      ['Features', 'Dual video call, Auto-HDR'],
-      ['Video', '4K@30/60fps, 1080p@30fps'],
+      ['Cameras', cameraMerge()],
+      ['Features', data.back_camera_features],
+      ['Video', data.back_camera_video_quality],
     ],
   };
 
@@ -92,15 +92,14 @@ const Phone = ({data}) => {
     soundTitle: ['Sound'],
     soundDetails: [
       ['Loudspeaker', 'stereo speakers'],
-      ['3.5mm jack', 'No'],
-      ['Quality', '32-bit/384kHz audio\nTuned by AKG'],
+      ['3.5mm jack', `${data.sound.jack ? 'Yes' : 'No'}`],
+      ['Quality', data.sound[0].speaker_quality],
     ],
   };
 
   const networkData = {
     networkTitle: ['Network'],
     networkDetails: [
-      ['WLAN', 'Wi-Fi 802.11 a/b/g/n/ac/6, dual-band, Wi-Fi Direct, hotspot'],
       ['Bluetooth', 'Yes, with A-GPS, GLONASS, BDS, GALILEO'],
       ['GPS', 'Yes, with A-GPS, GLONASS, BDS, GALILEO'],
       ['NFC', 'Yes'],
@@ -339,26 +338,6 @@ const Phone = ({data}) => {
         />
         <Rows
           data={mainCameraData.mainCameraDetails}
-          textStyle={{color: colors.subTitle, fontSize: 14, padding: 6}}
-          flexArr={[2, 6]}
-        />
-      </Table>
-
-      <Table
-        borderStyle={{borderWidth: 1, borderColor: colors.primary}}
-        style={{backgroundColor: colors.item}}>
-        <Row
-          data={selfieCameraData.selfieCameraTitle}
-          textStyle={{
-            color: colors.primary,
-            padding: 8,
-            fontSize: 18,
-            fontWeight: 'bold',
-            alignSelf: 'center',
-          }}
-        />
-        <Rows
-          data={selfieCameraData.selfieCameraDetails}
           textStyle={{color: colors.subTitle, fontSize: 14, padding: 6}}
           flexArr={[2, 6]}
         />
