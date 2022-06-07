@@ -1,6 +1,14 @@
 import {createSlice} from '@reduxjs/toolkit';
 import moment from 'moment';
+import storage from 'redux-persist/lib/storage';
+import {persistReducer} from 'redux-persist';
+
 import {apiCallBegan} from './api';
+
+const configPersist = {
+  key: 'root',
+  storage,
+};
 
 const slice = createSlice({
   name: 'user',
@@ -30,7 +38,8 @@ const slice = createSlice({
   },
 });
 
-export default slice.reducer;
+const persistedReducer = persistReducer(configPersist, slice.reducer);
+export default persistedReducer;
 export const {userRequsted, userAccepted1, userAccepted2, userRejected} =
   slice.actions;
 
