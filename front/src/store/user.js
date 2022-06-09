@@ -1,13 +1,14 @@
 import {createSlice} from '@reduxjs/toolkit';
 import moment from 'moment';
 import storage from 'redux-persist/lib/storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {persistReducer} from 'redux-persist';
 
 import {apiCallBegan} from './api';
 
 const configPersist = {
   key: 'root',
-  storage,
+  storage: AsyncStorage,
 };
 
 const slice = createSlice({
@@ -44,6 +45,7 @@ export const {userRequsted, userAccepted1, userAccepted2, userRejected} =
   slice.actions;
 
 const loginUrl = '/auth/token/login/';
+const registerUrl = '/auth/users/';
 const getUserUrl = '/auth/users/me';
 
 export const login = (data) => (dispatch, getState) => {
@@ -57,6 +59,18 @@ export const login = (data) => (dispatch, getState) => {
       method: 'post',
       onStart: userRequsted,
       onSuccess: userAccepted1,
+      onError: userRejected,
+      data,
+    }),
+  );
+};
+
+export const register = (data) => (dispatch) => {
+  return dispatch(
+    apiCallBegan({
+      url: registerUrl,
+      method: 'post',
+      onStart: userRequsted,
       onError: userRejected,
       data,
     }),

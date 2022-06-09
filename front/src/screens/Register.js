@@ -9,7 +9,7 @@ import {useTheme, useTranslation} from '../hooks';
 import * as regex from '../constants/regex';
 import {Block, Button, Input, Image, Text, Checkbox} from '../components';
 
-import {getUserData, login} from '../store/user';
+import {register} from '../store/user';
 import {useDispatch} from 'react-redux';
 import ActivityIndicator from '../components/ActivityIndicator';
 import ThemeContext from '../config/context';
@@ -59,12 +59,11 @@ const Register = () => {
     if (!Object.values(isValid).includes(false)) {
       setLoading(true);
       await dispatch(
-        login({
+        register({
           username: username,
           password: password,
         }),
       );
-      await dispatch(getUserData());
       setLoading(false);
       navigation.dispatch(StackActions.replace('Login'));
     }
@@ -173,6 +172,7 @@ const Register = () => {
                         <Text color="red">{errors.password}</Text>
                       )}
                       <Input
+                        secureTextEntry
                         marginBottom={sizes.m}
                         color={colors.subTitle}
                         label="Confirm"
